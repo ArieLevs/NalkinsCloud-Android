@@ -1,7 +1,0 @@
-#Sun Jan 14 16:42:59 IST 2018
-base.0=D\:\\NalkinsCloud\\Android_NalkinsCloud\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_922fc8bc75246403b54d25f8fb2fc3b1b5c5f63f
-renamed.1=classes2.dex
-renamed.0=classes.dex
-file.1=D\:\\NalkinsCloud\\Android_NalkinsCloud\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_5ade0f2a59426f3951512ed5a5184ed9e4806302\\classes.dex
-base.1=D\:\\NalkinsCloud\\Android_NalkinsCloud\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_5ade0f2a59426f3951512ed5a5184ed9e4806302
-file.0=D\:\\NalkinsCloud\\Android_NalkinsCloud\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_922fc8bc75246403b54d25f8fb2fc3b1b5c5f63f\\classes.dex
