@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@color/bg_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cloud.nalkins.nalkinscloud.DeviceConfigurationHandler" >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <TextView
+            android:id="@+id/device_config_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Current data will be configured to your new CloudBit device" />
+
+        <TextView
+            android:id="@+id/device_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Device name:"
+            android:paddingTop="20dp" />
+
+        <TextView
+            android:id="@+id/device_name_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/device_config_ssid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Network name:"
+            android:paddingTop="20dp" />
+
+        <TextView
+            android:id="@+id/device_config_ssid_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/get_device_ssid" />
+
+
+        <TextView
+            android:id="@+id/device_config_pass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Network password:"
+            android:paddingTop="20dp" />
+
+        <TextView
+            android:id="@+id/device_config_pass_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/get_device_pass" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/confirmButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:layout_marginTop="4dp"
+                android:layout_weight="61"
+                android:background="@color/light_blue"
+                android:text="@string/btn_confirm" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

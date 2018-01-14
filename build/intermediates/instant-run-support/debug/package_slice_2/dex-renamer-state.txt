@@ -1,0 +1,4 @@
+#Sun Jan 14 16:42:59 IST 2018
+base.0=D\:\\NalkinsCloud\\Android_NalkinsCloud\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\5\\slice_2
+renamed.0=classes.dex
+file.0=D\:\\NalkinsCloud\\Android_NalkinsCloud\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\5\\slice_2\\classes.dex

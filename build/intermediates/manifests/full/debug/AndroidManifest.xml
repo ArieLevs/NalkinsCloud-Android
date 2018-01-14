@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cloud.nalkins.nalkinscloud"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="24"
+        android:targetSdkVersion="25" />
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- For MQTT client use -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+    <!-- Allow BroadcastReceiver to get boot time permissions -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <meta-data
+        android:name="android.support.VERSION"
+        android:value="25.3.1" />
+
+    <application
+        android:name="cloud.nalkins.nalkinscloud.NetworkRequests"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme" >
+
+        <!-- Start BootBroadcast receiver once android gets booted -->
+        <receiver
+            android:name="cloud.nalkins.nalkinscloud.BootBroadcast"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.gms.vision.DEPENDENCIES"
+            android:value="barcode" />
+
+        <activity
+            android:name="cloud.nalkins.nalkinscloud.LogoActivity"
+            android:theme="@style/splashScreenTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="cloud.nalkins.nalkinscloud.LoginActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="cloud.nalkins.nalkinscloud.RegisterActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:parentActivityName="cloud.nalkins.nalkinscloud.LoginActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="cloud.nalkins.nalkinscloud.RegisterConfirmActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:parentActivityName="cloud.nalkins.nalkinscloud.RegisterActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="cloud.nalkins.nalkinscloud.ForgotPasswordActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:parentActivityName="cloud.nalkins.nalkinscloud.LoginActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="cloud.nalkins.nalkinscloud.ResetPassActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:parentActivityName="cloud.nalkins.nalkinscloud.MainActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="cloud.nalkins.nalkinscloud.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cloud.nalkins.nalkinscloud.ViewScheduledJobsActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:parentActivityName="cloud.nalkins.nalkinscloud.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cloud.nalkins.nalkinscloud.DateTimePickerActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:parentActivityName="cloud.nalkins.nalkinscloud.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="cloud.nalkins.nalkinscloud.DeviceAddNewActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop" />
+        <activity
+            android:name="cloud.nalkins.nalkinscloud.DeviceSetNameActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:parentActivityName="cloud.nalkins.nalkinscloud.DeviceAddNewActivity" />
+        <activity
+            android:name="cloud.nalkins.nalkinscloud.GetWifiCredentialsActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:parentActivityName="cloud.nalkins.nalkinscloud.DeviceSetNameActivity" />
+        <activity
+            android:name="cloud.nalkins.nalkinscloud.DeviceConfigurationHandler"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:parentActivityName="cloud.nalkins.nalkinscloud.GetWifiCredentialsActivity" />
+
+        <!-- For the use of MQTT client -->
+        <service
+            android:name="cloud.nalkins.nalkinscloud.MqttService"
+            android:enabled="true" >
+        </service>
+        <service android:name="org.eclipse.paho.android.service.MqttService" >
+        </service>
+
+        <activity
+            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+    </application>
+
+</manifest>

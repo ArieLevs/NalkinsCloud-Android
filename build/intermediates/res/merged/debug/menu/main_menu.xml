@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!-- tools:context=".MainActivity"> -->
+
+    <!-- Add new device -->
+    <item android:id="@+id/action_add_device"
+        android:icon="@drawable/ic_add_box_black_24dp"
+        android:title="@string/action_add_device"
+        app:showAsAction="always"/>
+
+    <!-- View scheduled jobs -->
+    <item android:id="@+id/action_view_scheduled_jobs"
+        android:icon="@drawable/alarm_clock_icon_24"
+        android:title="@string/action_view_scheduled_jobs"
+        app:showAsAction="always"/>
+
+    <!-- Refresh -->
+    <item android:id="@+id/action_refresh"
+        android:icon="@drawable/ic_action_refresh"
+        android:title="@string/action_refresh"
+        app:showAsAction="ifRoom" />
+
+    <!-- Help -->
+    <item android:id="@+id/action_help"
+        android:icon="@drawable/ic_action_help"
+        android:title="@string/action_help"
+        app:showAsAction="never"/>
+
+    <!-- Legal -->
+    <item android:id="@+id/action_legal"
+        android:title="@string/action_legal"
+        app:showAsAction="never"/>
+
+    <!-- Reset Pass -->
+    <item android:id="@+id/action_reset_pass"
+        android:title="@string/action_reset_pass"
+        app:showAsAction="never"/>
+
+    <!-- Logout -->
+    <item android:id="@+id/action_logout"
+        android:title="@string/action_logout"
+        app:showAsAction="never"/>
+
+</menu>

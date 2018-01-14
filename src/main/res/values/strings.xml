@@ -1,0 +1,125 @@
+<resources>
+    <string name="app_name">NalkinsCloud</string>
+    <string name="orgName">Nalkins.Cloud</string>
+    <string name="developer">Project by Arie Lev</string>
+
+    <!-- Login + Register Activity -->
+    <string name="hint_username">Username</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_validate_password">validate Password</string>
+    <string name="hint_first_name">First Name</string>
+    <string name="hint_last_name">Last Name</string>
+
+    <string name="btn_login">Login</string>
+    <string name="btn_register">Create Account</string>
+    <string name="btn_forgot_pass">Forgot Password</string>
+    <string name="do_not_have_account">Don\'t have an account yet?</string>
+
+    <!-- Registration Success Activity -->
+    <string name="btn_register_confirm">Go It</string>
+    <string name="register_success_title">Welcome to NalkinsCloud</string>
+    <string name="register_success_guide">Confirmation email sent to the email you have registered with,
+    In order to successfully activate NalkinsCloud account Please confirm email first</string>
+
+    <!-- Forgot Password Activity -->
+    <string name="add_email">Please Enter Email Address You Registered With</string>
+    <string name="reset_password">RESET PASSWORD</string>
+
+    <!-- Restart Password Activity -->
+    <string name="current_pass">Current Password</string>
+    <string name="current_pass_text">Please enter your current password</string>
+    <string name="new_pass">New Password</string>
+    <string name="new_pass_text">Please choose new password</string>
+    <string name="confirm_new_pass">Confirm New Password</string>
+
+
+    <!-- Main Activity -->
+    <string name="action_add_device">Add new device</string>
+    <string name="action_view_scheduled_jobs">View scheduled jobs</string>
+
+    <string name="temperature">Temperature: </string>
+    <string name="humidity">Humidity: </string>
+
+    <string name="current_state">Current state: </string>
+    <string name="consumption">Consumption: </string>
+    <string name="NA">Not available</string>
+    <string name="is_magnet_released">Released</string>
+
+    <string name="icon_description">This is icon image area</string>
+
+    <!-- Time scheduler -->
+    <string name="schedule">Scheduler: </string>
+    <string name="repeat">Repeat</string>
+    <string name="once">Once</string>
+    <string name="day_of_week">Day of Week: </string>
+
+
+    <string name="chk_sunday">Sunday</string>
+    <string name="chk_monday">Monday</string>
+    <string name="chk_tuesday">Tuesday</string>
+    <string name="chk_wednesday">Wednesday</string>
+    <string name="chk_thursday">Thursday</string>
+    <string name="chk_friday">Friday</string>
+    <string name="chk_saturday">Saturday</string>
+
+
+    <string name="turn">Turn: </string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+
+    <string name="set_start_date_text">Please select start date / time</string>
+    <string name="set_end_date_text">Please select end date / time</string>
+    <string name="check_end_date">Check to set end date</string>
+
+    <string name="hint_set_start_date">Set start date</string>
+    <string name="hint_set_start_time">Set start time</string>
+
+    <string name="hint_set_end_date">Set end date</string>
+    <string name="hint_set_end_time">Set end time</string>
+
+
+
+    <!-- job view layout -->
+    <string name="job_start">Job starts at:</string>
+
+
+    <!-- ScanQR Activity -->
+    <string name="hint_device_name">Set Device Name</string>
+
+    <!-- add device start Activity -->
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_continue">Continue</string>
+    <string name="device_instructions">Please make sure the device is on configuration mode. the led should rapidly blink</string>
+
+    <!-- add device name Activity -->
+    <string name="device_name_instructions">Please choose name for your device</string>
+    <string name="device_type_text">Found device: </string>
+
+    <!-- GetWifi Activity -->
+    <string name="hint_wifi_pass">Enter wifi password</string>
+
+    <!-- Device Configuration Activity -->
+    <string name="btn_confirm">Confirm</string>
+    <string name="btn_set_default">Set Default</string>
+    <string name="get_device_ssid">SSID</string>
+    <string name="get_device_pass">WIFI Password</string>
+
+    <!-- Action bar strings -->
+    <string name="action_help">Help</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_legal">Legal</string>
+    <string name="action_exit">Exit</string>
+    <string name="action_reset_pass">Reset Password</string>
+    <string name="action_logout">Logout</string>
+
+    <!-- Global Strings -->
+    <string name="btn_next">Next</string>
+
+    <!-- Magnet Device -->
+
+    <!-- Temperature Device -->
+    <string name="remove_device_text">Remove Device</string>
+    <string name="device_options_button">Device Options</string>
+
+</resources>

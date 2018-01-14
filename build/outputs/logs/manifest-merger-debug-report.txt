@@ -1,0 +1,320 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:3:1-148:12
+	package
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:4:5-41
+		INJECTED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml
+		INJECTED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml
+		INJECTED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:3:11-69
+	android:versionCode
+		INJECTED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml
+		INJECTED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:6:5-76
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:6:22-73
+uses-permission#android.permission.CHANGE_WIFI_STATE
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:7:5-76
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:7:22-73
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:8:5-79
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:8:22-76
+uses-permission#android.permission.INTERNET
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:10:5-66
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:10:22-64
+uses-permission#android.permission.VIBRATE
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:12:5-65
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:12:22-63
+uses-permission#android.permission.WAKE_LOCK
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:15:5-68
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:15:22-65
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:16:5-79
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:16:22-76
+uses-permission#android.permission.CHANGE_NETWORK_STATE
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:17:5-79
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:17:22-76
+uses-permission#android.permission.WRITE_SETTINGS
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:18:5-73
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:18:22-70
+uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:22:5-80
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:22:22-78
+application
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:24:5-144:19
+MERGED from [com.android.support:design:25.3.1] C:\Users\Arie\.android\build-cache\6178dea5d7d747ed6ee3cb5afeb6b8547d631f21\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Arie\.android\build-cache\43c4b7981f5753e03982d44770df6949a959b8e9\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] C:\Users\Arie\.android\build-cache\f536a13908dd99c37c6f7cdfc8b62003b064ca41\output\AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:support-vector-drawable:25.3.1] C:\Users\Arie\.android\build-cache\b616270f19ee4fab69792ed1e87df7d6f6b43e32\output\AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:transition:25.3.1] C:\Users\Arie\.android\build-cache\b646d646c7b52371db6518f65c6f70dedc96e2a4\output\AndroidManifest.xml:26:5-20
+MERGED from [com.android.volley:volley:1.0.0] C:\Users\Arie\.android\build-cache\e1ab6cd2342c36730088ed83c3658b25ba5c7c2a\output\AndroidManifest.xml:9:5-20
+MERGED from [com.google.android.gms:play-services-vision:10.2.0] C:\Users\Arie\.android\build-cache\1e6691b458de24d0d489fa066381d75aaf1124c8\output\AndroidManifest.xml:4:5-19
+MERGED from [com.google.android.gms:play-services-base:10.2.0] C:\Users\Arie\.android\build-cache\9a1cf462785df38daac56c27eac675292a2954d1\output\AndroidManifest.xml:18:5-20:19
+MERGED from [com.google.android.gms:play-services-tasks:10.2.0] C:\Users\Arie\.android\build-cache\ba02ce9cc581bd16b42ff6af95fcd5755784c0fb\output\AndroidManifest.xml:4:5-19
+MERGED from [com.google.android.gms:play-services-basement:10.2.0] C:\Users\Arie\.android\build-cache\541a18efafff784666aa180fc88b5ed92e3af2d5\output\AndroidManifest.xml:19:5-21:19
+MERGED from [com.android.support:support-v4:25.3.1] C:\Users\Arie\.android\build-cache\7fe170875e6bc89f072bf99f36304e79418d6d97\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-fragment:25.3.1] C:\Users\Arie\.android\build-cache\b4b8671daa2d423d3fa8dd2c15a4f6a25b68da62\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-media-compat:25.3.1] C:\Users\Arie\.android\build-cache\caa191fc8d57028ac2a1e9feaa4fb2aa29a2ac93\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-ui:25.3.1] C:\Users\Arie\.android\build-cache\9b77204b25dc9f6937e27f00249cb3f4d04d90f6\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-utils:25.3.1] C:\Users\Arie\.android\build-cache\28321b75ce31318e1bde05d9f9ba420803706d5c\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-compat:25.3.1] C:\Users\Arie\.android\build-cache\73646aa92c18ee640f5e450549a53ce0029ad936\output\AndroidManifest.xml:29:5-20
+	android:label
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:29:9-41
+	android:supportsRtl
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:31:9-35
+	android:roundIcon
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:30:9-54
+	android:allowBackup
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:27:9-35
+	android:icon
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:28:9-43
+	android:theme
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:32:9-40
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:26:9-66
+receiver#cloud.nalkins.nalkinscloud.BootBroadcast
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:35:9-41:20
+	android:enabled
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:37:13-35
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:36:13-68
+intent-filter#android.intent.action.BOOT_COMPLETED
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:38:13-40:29
+action#android.intent.action.BOOT_COMPLETED
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:39:17-79
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:39:25-76
+meta-data#com.google.android.gms.version
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:43:9-45:69
+MERGED from [com.google.android.gms:play-services-basement:10.2.0] C:\Users\Arie\.android\build-cache\541a18efafff784666aa180fc88b5ed92e3af2d5\output\AndroidManifest.xml:20:9-121
+	android:value
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:45:13-66
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:44:13-58
+meta-data#com.google.android.gms.vision.DEPENDENCIES
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:46:9-48:39
+	android:value
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:48:13-36
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:47:13-70
+activity#cloud.nalkins.nalkinscloud.LogoActivity
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:51:9-59:20
+	android:theme
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:53:13-53
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:52:13-67
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:54:13-58:29
+action#android.intent.action.MAIN
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:55:17-69
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:55:25-66
+category#android.intent.category.LAUNCHER
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:57:17-77
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:57:27-74
+activity#cloud.nalkins.nalkinscloud.LoginActivity
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:60:9-64:54
+	android:label
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:62:13-45
+	android:launchMode
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:63:13-43
+	android:windowSoftInputMode
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:64:13-52
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:61:13-68
+activity#cloud.nalkins.nalkinscloud.RegisterActivity
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:65:9-70:85
+	android:label
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:67:13-45
+	android:parentActivityName
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:70:13-82
+	android:launchMode
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:68:13-43
+	android:windowSoftInputMode
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:69:13-52
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:66:13-71
+activity#cloud.nalkins.nalkinscloud.RegisterConfirmActivity
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:72:9-77:88
+	android:label
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:74:13-45
+	android:parentActivityName
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:77:13-85
+	android:launchMode
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:75:13-43
+	android:windowSoftInputMode
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:76:13-52
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:73:13-78
+activity#cloud.nalkins.nalkinscloud.ForgotPasswordActivity
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:79:9-84:85
+	android:label
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:81:13-45
+	android:parentActivityName
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:84:13-82
+	android:launchMode
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:82:13-43
+	android:windowSoftInputMode
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:83:13-52
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:80:13-77
+activity#cloud.nalkins.nalkinscloud.ResetPassActivity
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:86:9-91:84
+	android:label
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:88:13-45
+	android:parentActivityName
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:91:13-81
+	android:launchMode
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:89:13-43
+	android:windowSoftInputMode
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:90:13-52
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:87:13-72
+activity#cloud.nalkins.nalkinscloud.MainActivity
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:93:9-97:51
+	android:screenOrientation
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:97:13-49
+	android:label
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:95:13-45
+	android:launchMode
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:96:13-43
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:94:13-67
+activity#cloud.nalkins.nalkinscloud.ViewScheduledJobsActivity
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:99:9-104:83
+	android:screenOrientation
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:103:13-49
+	android:label
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:101:13-45
+	android:parentActivityName
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:104:13-81
+	android:launchMode
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:102:13-43
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:100:13-80
+activity#cloud.nalkins.nalkinscloud.DateTimePickerActivity
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:106:9-111:83
+	android:screenOrientation
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:110:13-49
+	android:label
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:108:13-45
+	android:parentActivityName
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:111:13-81
+	android:launchMode
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:109:13-43
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:107:13-77
+activity#cloud.nalkins.nalkinscloud.DeviceAddNewActivity
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:113:9-116:45
+	android:label
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:115:13-45
+	android:launchMode
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:116:13-43
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:114:13-75
+activity#cloud.nalkins.nalkinscloud.DeviceSetNameActivity
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:118:9-122:91
+	android:label
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:120:13-45
+	android:parentActivityName
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:122:13-89
+	android:launchMode
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:121:13-43
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:119:13-76
+activity#cloud.nalkins.nalkinscloud.GetWifiCredentialsActivity
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:124:9-128:92
+	android:label
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:126:13-45
+	android:parentActivityName
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:128:13-90
+	android:launchMode
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:127:13-43
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:125:13-81
+activity#cloud.nalkins.nalkinscloud.DeviceConfigurationHandler
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:130:9-134:97
+	android:label
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:132:13-45
+	android:parentActivityName
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:134:13-95
+	android:launchMode
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:133:13-43
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:131:13-81
+service#cloud.nalkins.nalkinscloud.MqttService
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:137:9-140:19
+	android:enabled
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:139:13-35
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:138:13-66
+service#org.eclipse.paho.android.service.MqttService
+ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:141:9-142:19
+	android:name
+		ADDED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml:141:18-77
+uses-sdk
+INJECTED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+MERGED from [com.android.support:design:25.3.1] C:\Users\Arie\.android\build-cache\6178dea5d7d747ed6ee3cb5afeb6b8547d631f21\output\AndroidManifest.xml:21:5-23:62
+MERGED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Arie\.android\build-cache\43c4b7981f5753e03982d44770df6949a959b8e9\output\AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] C:\Users\Arie\.android\build-cache\f536a13908dd99c37c6f7cdfc8b62003b064ca41\output\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:25.3.1] C:\Users\Arie\.android\build-cache\b616270f19ee4fab69792ed1e87df7d6f6b43e32\output\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:recyclerview-v7:25.3.1] C:\Users\Arie\.android\build-cache\000ab29ebb9205bdfcfeec2395bb3da0a5d20542\output\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:transition:25.3.1] C:\Users\Arie\.android\build-cache\b646d646c7b52371db6518f65c6f70dedc96e2a4\output\AndroidManifest.xml:20:5-44
+MERGED from [com.android.volley:volley:1.0.0] C:\Users\Arie\.android\build-cache\e1ab6cd2342c36730088ed83c3658b25ba5c7c2a\output\AndroidManifest.xml:7:5-43
+MERGED from [com.google.android.gms:play-services-vision:10.2.0] C:\Users\Arie\.android\build-cache\1e6691b458de24d0d489fa066381d75aaf1124c8\output\AndroidManifest.xml:3:5-43
+MERGED from [com.google.android.gms:play-services-base:10.2.0] C:\Users\Arie\.android\build-cache\9a1cf462785df38daac56c27eac675292a2954d1\output\AndroidManifest.xml:17:5-43
+MERGED from [com.google.android.gms:play-services-tasks:10.2.0] C:\Users\Arie\.android\build-cache\ba02ce9cc581bd16b42ff6af95fcd5755784c0fb\output\AndroidManifest.xml:3:5-43
+MERGED from [com.google.android.gms:play-services-basement:10.2.0] C:\Users\Arie\.android\build-cache\541a18efafff784666aa180fc88b5ed92e3af2d5\output\AndroidManifest.xml:17:5-43
+MERGED from [com.android.support:support-v4:25.3.1] C:\Users\Arie\.android\build-cache\7fe170875e6bc89f072bf99f36304e79418d6d97\output\AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-fragment:25.3.1] C:\Users\Arie\.android\build-cache\b4b8671daa2d423d3fa8dd2c15a4f6a25b68da62\output\AndroidManifest.xml:21:5-23:60
+MERGED from [com.android.support:support-media-compat:25.3.1] C:\Users\Arie\.android\build-cache\caa191fc8d57028ac2a1e9feaa4fb2aa29a2ac93\output\AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-core-ui:25.3.1] C:\Users\Arie\.android\build-cache\9b77204b25dc9f6937e27f00249cb3f4d04d90f6\output\AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-core-utils:25.3.1] C:\Users\Arie\.android\build-cache\28321b75ce31318e1bde05d9f9ba420803706d5c\output\AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:support-compat:25.3.1] C:\Users\Arie\.android\build-cache\73646aa92c18ee640f5e450549a53ce0029ad936\output\AndroidManifest.xml:21:5-23:58
+	tools:overrideLibrary
+		ADDED from [com.android.support:design:25.3.1] C:\Users\Arie\.android\build-cache\6178dea5d7d747ed6ee3cb5afeb6b8547d631f21\output\AndroidManifest.xml:23:9-59
+	android:targetSdkVersion
+		INJECTED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml
+		INJECTED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml
+		INJECTED from D:\NalkinsCloud\Android_NalkinsCloud\app\src\main\AndroidManifest.xml
+meta-data#android.support.VERSION
+ADDED from [com.android.support:design:25.3.1] C:\Users\Arie\.android\build-cache\6178dea5d7d747ed6ee3cb5afeb6b8547d631f21\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Arie\.android\build-cache\43c4b7981f5753e03982d44770df6949a959b8e9\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] C:\Users\Arie\.android\build-cache\f536a13908dd99c37c6f7cdfc8b62003b064ca41\output\AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:support-vector-drawable:25.3.1] C:\Users\Arie\.android\build-cache\b616270f19ee4fab69792ed1e87df7d6f6b43e32\output\AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:recyclerview-v7:25.3.1] C:\Users\Arie\.android\build-cache\000ab29ebb9205bdfcfeec2395bb3da0a5d20542\output\AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:transition:25.3.1] C:\Users\Arie\.android\build-cache\b646d646c7b52371db6518f65c6f70dedc96e2a4\output\AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:support-v4:25.3.1] C:\Users\Arie\.android\build-cache\7fe170875e6bc89f072bf99f36304e79418d6d97\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-fragment:25.3.1] C:\Users\Arie\.android\build-cache\b4b8671daa2d423d3fa8dd2c15a4f6a25b68da62\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-media-compat:25.3.1] C:\Users\Arie\.android\build-cache\caa191fc8d57028ac2a1e9feaa4fb2aa29a2ac93\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-core-ui:25.3.1] C:\Users\Arie\.android\build-cache\9b77204b25dc9f6937e27f00249cb3f4d04d90f6\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-core-utils:25.3.1] C:\Users\Arie\.android\build-cache\28321b75ce31318e1bde05d9f9ba420803706d5c\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-compat:25.3.1] C:\Users\Arie\.android\build-cache\73646aa92c18ee640f5e450549a53ce0029ad936\output\AndroidManifest.xml:25:5-27:34
+	android:value
+		ADDED from [com.android.support:design:25.3.1] C:\Users\Arie\.android\build-cache\6178dea5d7d747ed6ee3cb5afeb6b8547d631f21\output\AndroidManifest.xml:27:9-31
+	android:name
+		ADDED from [com.android.support:design:25.3.1] C:\Users\Arie\.android\build-cache\6178dea5d7d747ed6ee3cb5afeb6b8547d631f21\output\AndroidManifest.xml:26:9-47
+activity#com.google.android.gms.common.api.GoogleApiActivity
+ADDED from [com.google.android.gms:play-services-base:10.2.0] C:\Users\Arie\.android\build-cache\9a1cf462785df38daac56c27eac675292a2954d1\output\AndroidManifest.xml:19:9-172
+	android:exported
+		ADDED from [com.google.android.gms:play-services-base:10.2.0] C:\Users\Arie\.android\build-cache\9a1cf462785df38daac56c27eac675292a2954d1\output\AndroidManifest.xml:19:146-170
+	android:theme
+		ADDED from [com.google.android.gms:play-services-base:10.2.0] C:\Users\Arie\.android\build-cache\9a1cf462785df38daac56c27eac675292a2954d1\output\AndroidManifest.xml:19:86-145
+	android:name
+		ADDED from [com.google.android.gms:play-services-base:10.2.0] C:\Users\Arie\.android\build-cache\9a1cf462785df38daac56c27eac675292a2954d1\output\AndroidManifest.xml:19:19-85

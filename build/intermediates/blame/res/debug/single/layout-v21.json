@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "D:\\NalkinsCloud\\Android_NalkinsCloud\\app\\build\\intermediates\\res\\merged\\debug\\layout-v21\\notification_template_icon_group.xml",
+        "source": "C:\\Users\\Arie\\.android\\build-cache\\43c4b7981f5753e03982d44770df6949a959b8e9\\output\\res\\layout-v21\\notification_template_icon_group.xml"
+    },
+    {
+        "merged": "D:\\NalkinsCloud\\Android_NalkinsCloud\\app\\build\\intermediates\\res\\merged\\debug\\layout-v21\\notification_template_custom_big.xml",
+        "source": "C:\\Users\\Arie\\.android\\build-cache\\43c4b7981f5753e03982d44770df6949a959b8e9\\output\\res\\layout-v21\\notification_template_custom_big.xml"
+    },
+    {
+        "merged": "D:\\NalkinsCloud\\Android_NalkinsCloud\\app\\build\\intermediates\\res\\merged\\debug\\layout-v21\\notification_action.xml",
+        "source": "C:\\Users\\Arie\\.android\\build-cache\\43c4b7981f5753e03982d44770df6949a959b8e9\\output\\res\\layout-v21\\notification_action.xml"
+    },
+    {
+        "merged": "D:\\NalkinsCloud\\Android_NalkinsCloud\\app\\build\\intermediates\\res\\merged\\debug\\layout-v21\\notification_action_tombstone.xml",
+        "source": "C:\\Users\\Arie\\.android\\build-cache\\43c4b7981f5753e03982d44770df6949a959b8e9\\output\\res\\layout-v21\\notification_action_tombstone.xml"
+    }
+]
