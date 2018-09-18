@@ -30,7 +30,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -49,15 +51,18 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private ProgressDialog pDialog; // 'Processing' dialog
 
-    Handler uiHandler;
+    static Handler uiHandler;
+    final int UPDATE_DEVICE_UI = 3;
     final int SHOW_GET_DEVICES_DIALOG = 2;
     final int SHOW_UPDATE_SERVER_DIALOG = 1;
     final int HIDE_DIALOG = 0;
 
-    // Declare a private 'MainActivity' instance, to be used by other classes
-    private static MainActivity mainActivityInstance;
-
     private SharedPreferences sharedPreferences;
+
+    static final int GET_DYNAMIC_LAYOUT_SPECIAL_TEMP_CONF_REQUEST = 2;
+
+    // Hold the last state of the special automation status
+    private boolean isManualConfShowing = false;
 
     // Each cell in the 'deviceList' holds (device_id, device_type, device_name)
     static ArrayList<HashMap<String, String>> devicesList = new ArrayList<>();
@@ -118,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
         Log.d(TAG, "Running 'onResume' function");
-        sharedPreferences.setIsMainActivityRunning(true);
         // If no token present in shared preferences the logout the user
         if (sharedPreferences.getToken() == NULL) {
             finish();
@@ -128,16 +132,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-
-        sharedPreferences.setIsMainActivityRunning(true);
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
-        // Store in shared preferences that main activity is running
-        sharedPreferences.setIsMainActivityRunning(true);
 
         updateCustomerDeviceWithToken();
     }
@@ -146,16 +146,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        // Store in shared preferences that main activity not running
-        sharedPreferences.setIsMainActivityRunning(false);
+        uiHandler.removeCallbacks(null);
     }
 
     @Override
     protected void  onPause() {
         super.onPause();
-
-        // Store in shared preferences that main activity not running
-        sharedPreferences.setIsMainActivityRunning(false);
     }
 
 
@@ -164,9 +160,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
-
-        // Once activity created, store current instance
-        mainActivityInstance = this;
 
         // Progress dialog
         pDialog = new ProgressDialog(this);
@@ -177,6 +170,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void handleMessage(Message inputMessage) {
                 switch (inputMessage.what) {
+                    case UPDATE_DEVICE_UI:
+                        String CurrentString = inputMessage.obj.toString();
+                        String[] separated = CurrentString.split("-");
+
+                        handleIncomingMessages(separated[0], separated[1]);
+                        break;
                     case SHOW_UPDATE_SERVER_DIALOG:
                         pDialog.setMessage("Updating Server ...");
                         Functions.showDialog(pDialog);
@@ -201,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
         }
         // Print a welcome message
         Toast.makeText(getApplicationContext(), "Welcome " + sharedPreferences.getUsername(), Toast.LENGTH_LONG).show();
-        sharedPreferences.setIsMainActivityRunning(true);
+
         devicesList.clear();
 
         getDeviceListFromServer();
@@ -234,8 +233,6 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     // If status response equals success
                     if (response.getString("status").equals("success")) {
-                        // device list successfully returned
-                        Log.d(TAG, "device list successfully returned:");
 
                         // Parse response to JSON Array
                         JSONArray jsonArray = response.getJSONArray("message");
@@ -274,25 +271,29 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Log.e(TAG, "Server Time out error or no connection");
-                    Toast.makeText(getApplicationContext(),
-                            "Timeout error! Server is not responding for device list request",
-                            Toast.LENGTH_LONG).show();
-                } else {
-
-                    String body;
-                    //get response body and parse with appropriate encoding
-                    if (error.networkResponse.data != null) {
-                        try {
-                            body = new String(error.networkResponse.data, "UTF-8");
-                            Log.e(TAG, "Device list error: " + body);
-                            Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                try {
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                        Log.e(TAG, "Server Time out error or no connection");
+                        Toast.makeText(getApplicationContext(),
+                                "Timeout error! Server is not responding for device list request",
+                                Toast.LENGTH_LONG).show();
+                    } else {
+                        String body;
+                        //get response body and parse with appropriate encoding
+                        if (error.networkResponse.data != null) {
+                            try {
+                                body = new String(error.networkResponse.data, "UTF-8");
+                                Log.e(TAG, "Device list error: " + body);
+                                Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
                 }
+
                 deviceListUpdatedByServer = true;
                 hideDialog.sendToTarget();
             }
@@ -311,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * Threaded function, wait until 'MqttClientClass' object in 'MqttService' Class is NOT null,
+     * Threaded function, wait until 'MqttClient' object in 'MqttService' Class is NOT null,
      * Wait until 'devicesList' is not empty,
      * Once conditions are met, loop through 'devicesList' and subscribe each device to MQTT server
      */
@@ -322,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     // check if connected to AppConfig.DEVICE_AP_SSID
                     Log.d(TAG, "Waiting for MQTT object to create");
-                    // While 'MqttClientClass' object in 'MqttService' Class is null or devicesList is empty, wait
+                    // While 'MqttClient' object in 'MqttService' Class is null or devicesList is empty, wait
                     while(MqttService.getStaticHandleMQTT() == null) {
                         Thread.sleep(2000);
                         Log.d(TAG, "Waiting for MQTT object to create");
@@ -338,8 +339,8 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(TAG, "Waiting for device list");
                         }
 
-                    // Once 'MqttClientClass' exists, and deviceList contains something
-                    MqttClientClass handleMQTT = MqttService.getStaticHandleMQTT(); // Get mqtt client object
+                    // Once 'MqttClient' exists, and deviceList contains something
+                    MqttClient handleMQTT = MqttService.getStaticHandleMQTT(); // Get mqtt client object
 
                     for(int i = 0; i < MainActivity.devicesList.size(); i++) {
                         final HashMap<String, String> deviceMap = MainActivity.devicesList.get(i);
@@ -370,12 +371,11 @@ public class MainActivity extends AppCompatActivity {
                                 handleMQTT.publishMessage(topic + "/update_now", "1", AppConfig.NOT_RETAINED_MESSAGE);
                             }
                             break;
-                            default: { // Special distillery layout
+                            case "distillery": { // Special distillery layout
                                 // Subscribe default 'status' topic that will represent LWT messages
                                 handleMQTT.subscribeToTopic(topic + "/status", AppConfig.MESSAGE_QOS_1);
                                 handleMQTT.subscribeToTopic(topic + "/temperature", AppConfig.MESSAGE_QOS_1);
                                 handleMQTT.subscribeToTopic(topic + "/automation_error", AppConfig.MESSAGE_QOS_1);
-                                handleMQTT.subscribeToTopic(topic + "/automation", AppConfig.MESSAGE_QOS_1);
                                 handleMQTT.publishMessage(topic + "/update_now", "1", AppConfig.NOT_RETAINED_MESSAGE);
                             }
                             break;
@@ -402,13 +402,13 @@ public class MainActivity extends AppCompatActivity {
         // Brake down the topic into tokens
         // Since the topic is in the form of "device_id/type/sensor" the delimiter is '/'
         StringTokenizer tokens = new StringTokenizer(topic, "/");
-        String topic_device_id = tokens.nextToken(); //
-        String topic_device_type = tokens.nextToken(); //
-        String topic_general = tokens.nextToken(); //
+        String topicDeviceId = tokens.nextToken(); //
+        String topicDeviceType = tokens.nextToken(); //
+        String topicGeneral = tokens.nextToken(); //
 
-        Log.d(TAG, "topic_device_id: " + topic_device_id);
-        Log.d(TAG, "topic_device_type: " + topic_device_type);
-        Log.d(TAG, "topic_sensor: " + topic_general);
+        Log.d(TAG, "topicDeviceId: " + topicDeviceId);
+        Log.d(TAG, "topicDeviceType: " + topicDeviceType);
+        Log.d(TAG, "topicGeneral: " + topicGeneral);
         Log.d(TAG, "message: " + message);
 
         // Run on each object in the device list that was built earlier,
@@ -418,24 +418,24 @@ public class MainActivity extends AppCompatActivity {
             // Since each cell from the ArrayList, hold hash map (as described above)
             // Get each array value (HashMap) from devicesList
             HashMap <String,String> deviceMap = devicesList.get(i);
+            String currentDeviceID = deviceMap.get("device_id");
+            String currentDeviceType = deviceMap.get("device_type");
 
-            Log.d(TAG, "Found device with ID: " + deviceMap.get("device_id"));
             // If current device from 'deviceList' is the device that the topic contains then
-            if(deviceMap.get("device_id").equals(topic_device_id)) {
-
-                Log.d(TAG, "Working on device_id: " + deviceMap.get("device_id"));
+            if(currentDeviceID.equals(topicDeviceId)) {
+                Log.d(TAG, "Working on device_id: " + currentDeviceID);
 
                 // Trace relevant layout object by its deviceId
                 for (HashMap.Entry<String, Object> entry : inflatedLayoutsIds.entrySet()) {
-                    Log.d(TAG, "Standing on record: " + entry.getKey() + " - " + entry.getValue());
                     // If the current device id equals the id of the current object (layout) then
-                    if (deviceMap.get("device_id").equals(entry.getKey())) {
-                        switch (deviceMap.get("device_type")) {
+                    if (currentDeviceID.equals(entry.getKey())) {
+                        Log.d(TAG, "Working on device_type: " + currentDeviceType);
+                        switch (currentDeviceType) {
                             case "dht": {
                                 // Retrieve relevant layout
                                 DynamicLayoutTemperature tempLayout = (DynamicLayoutTemperature) entry.getValue();
 
-                                switch (topic_general) {
+                                switch (topicGeneral) {
                                     case "status": {
                                         tempLayout.setStatusValue(message);
                                         if (message.equals("online")) {
@@ -461,7 +461,7 @@ public class MainActivity extends AppCompatActivity {
                             case "switch": {
                                 // Set a temp Switch object
                                 DynamicLayoutSwitch tempLayout = (DynamicLayoutSwitch) entry.getValue();
-                                switch (topic_general) {
+                                switch (topicGeneral) {
                                     case "status": {
                                         tempLayout.setStatusValue(message);
                                         if (message.equals("online")) {
@@ -494,7 +494,7 @@ public class MainActivity extends AppCompatActivity {
                                 // Set a temp Magnet object
                                 DynamicLayoutMagnet tempLayout = (DynamicLayoutMagnet) entry.getValue();
 
-                                switch (topic_general) {
+                                switch (topicGeneral) {
                                     case "status": {
                                         tempLayout.setDeviceStatus(message);
                                         if (message.equals("online")) {
@@ -539,6 +539,56 @@ public class MainActivity extends AppCompatActivity {
                                                 tempLayout.setIsOpenedLockedStateTextColor(R.color.red);
                                             }
                                         }
+                                    }
+                                    break;
+                                }
+                            }
+                            break;
+
+                            case "distillery": {
+                                // Set a temp Special object
+                                DynamicLayoutDistillery temp = (DynamicLayoutDistillery) entry.getValue();
+
+                                switch (topicGeneral) {
+                                    case "status": {
+                                        temp.setStatusValue(message);
+                                        if (message.equals("online")) {
+                                            temp.setStatusTextColor(R.color.green);
+                                        }
+                                        else if (message.equals("offline")) {
+                                            temp.setStatusTextColor(R.color.red);
+                                        }
+                                    }
+                                    break;
+                                    case "temperature": {
+                                        temp.setDeviceTemperatureText(message + " C, from: " +
+                                                DateFormat.getDateTimeInstance().format(new Date()));
+                                    }
+                                    break;
+                                    case "automation_error": {
+                                        if(message.equals("1")) {
+                                            temp.setTemperatureIcon(R.drawable.warning_64);
+                                            sharedPreferences.setAutomationError(true);
+                                        }
+                                    }
+                                    break;
+                                    case "automation": {
+                                        StringTokenizer automationToken = new StringTokenizer(message, ",");
+                                        String value = automationToken.nextToken();
+
+                                        if(value.equals("1"))
+                                            temp.getDistilleryToggleButton().setChecked(true);
+                                        if(value.equals("0"))
+                                            temp.getDistilleryToggleButton().setChecked(false);
+                                    }
+                                    break;
+                                    case "update_temp_settings": {
+                                        if(message.equals("1"))
+                                            // Update the icon to "V" to indicate
+                                            temp.setTemperatureConfStatusIcon(R.drawable.v_24);
+                                        if(message.equals("0"))
+                                            // Update the icon to "X" to indicate
+                                            temp.setTemperatureConfStatusIcon(R.drawable.x_24);
                                     }
                                     break;
                                 }
@@ -740,6 +790,11 @@ public class MainActivity extends AppCompatActivity {
                     setupDynamicLayoutMagnet(mainLayout, deviceMap);
                 }
                 break;
+
+                default: { // Special distillery layout
+                    setupDynamicLayoutDistillery(mainLayout, deviceMap);
+                }
+                break;
             }
         }
         Functions.hideDialog(pDialog); // Stop dialog
@@ -754,6 +809,7 @@ public class MainActivity extends AppCompatActivity {
                 , deviceMap.get("device_type"), deviceMap.get("device_name"));
 
 
+        // Show additional device settings options
         tempLayout.getOptionsIcon().setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (tempLayout.getDeviceOptionsLayout().getVisibility() == View.VISIBLE){ // If the manual conf layout made visible
@@ -764,6 +820,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Remove device from application
         tempLayout.getRemoveIcon().setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 removeDeviceAlert(deviceMap.get("device_id"));
@@ -856,7 +913,7 @@ public class MainActivity extends AppCompatActivity {
 
         final String topic = deviceMap.get("device_id") + "/" + deviceMap.get("device_type");
 
-        final MqttClientClass handleMQTT = MqttService.getStaticHandleMQTT(); // Get mqtt client object
+        final MqttClient handleMQTT = MqttService.getStaticHandleMQTT(); // Get mqtt client object
 
         // Set 'magnet' layout (the object) icon, and set it as clickable
         tempLayout.getDeviceIcon().setOnClickListener(new View.OnClickListener() {
@@ -926,6 +983,183 @@ public class MainActivity extends AppCompatActivity {
         inflatedLayoutsIds.put(deviceMap.get("device_id"), tempLayout);
     }
 
+    void setupDynamicLayoutDistillery(LinearLayout mainLayout, final HashMap<String, String> deviceMap) {
+        final DynamicLayoutDistillery tempLayout = new DynamicLayoutDistillery(getApplicationContext(), deviceMap.get("device_id")
+                , deviceMap.get("device_type"), deviceMap.get("device_name"));
+
+        final String topic = deviceMap.get("device_id") + "/" + deviceMap.get("device_type");
+
+        // Set the 'Start scheduler button' function
+        tempLayout.startScheduler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, DateTimePickerActivity.class);
+                // Add the device id and pass it to the scheduler activity
+                intent.putExtra("DEVICE_ID", deviceMap.get("device_id"));
+                intent.putExtra("TOPIC", topic + "/automation");
+                startActivity(intent);
+            }
+        });
+
+        // Set the 'Start Temperature config button' function
+        // On icon click new activity will start
+        tempLayout.startTemperatureConf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, DynamicLayoutDistilleryTemperatureSet.class);
+                // Add current 'device id' values, since if returned, main activity
+                // Will need to identify which layout to update
+                intent.putExtra("DEVICE_ID", deviceMap.get("device_id"));
+                // startActivityForResult is executed, since this activity will return
+                // A flag whether the user selected manual configurations
+                startActivityForResult(intent, GET_DYNAMIC_LAYOUT_SPECIAL_TEMP_CONF_REQUEST, null);
+            }
+        });
+
+        if(sharedPreferences.getIsCustomTempConfigured())
+            tempLayout.setTemperatureConfStatusIcon(R.drawable.v_24);
+        else
+            tempLayout.setTemperatureConfStatusIcon(R.drawable.x_24);
+
+        tempLayout.tempIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(sharedPreferences.getAutomationError()) {
+                    tempLayout.setTemperatureIcon(R.drawable.temperature_icon_32);
+                    sharedPreferences.setAutomationError(false);
+                    tempLayout.getDistilleryToggleButton().setChecked(false);
+                    MqttService.getStaticHandleMQTT().publishMessage(topic + "/automation_error", "0", AppConfig.RETAINED_MESSAGE);
+                }
+            }
+        });
+
+        // Show additional device settings options
+        tempLayout.getOptionsIcon().setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (tempLayout.getDeviceOptionsLayout().getVisibility() == View.VISIBLE){ // If the manual conf layout made visible
+                    tempLayout.getDeviceOptionsLayout().setVisibility(View.GONE);// Show the layout
+                } else { // If the manual conf layout made invisible
+                    tempLayout.getDeviceOptionsLayout().setVisibility(View.VISIBLE);// Show the layout
+                }
+            }
+        });
+
+        // Remove device from application
+        tempLayout.getRemoveIcon().setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                removeDeviceAlert(deviceMap.get("device_id"));
+            }
+        });
+
+        // Set the 'manual_configuration_start_icon' function
+        tempLayout.startManualConf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tempLayout.isDeviceOnline()) {
+                    if (isManualConfShowing) { // If the manual conf layout made visible
+
+                        isManualConfShowing = false; // Change flag statue to remember previous state
+                        tempLayout.getHiddenManualConfLayout().setVisibility(View.GONE);// Show the layout
+                        tempLayout.setManualConfStartIcon(R.drawable.arrow_right_24); // Set X as status icon (not running)
+                    } else { // If the manual conf layout made invisible
+                        isManualConfShowing = true; // Change flag statue to remember previous state
+                        tempLayout.getHiddenManualConfLayout().setVisibility(View.VISIBLE);// Show the layout
+                        tempLayout.setManualConfStartIcon(R.drawable.arrow_left_24); // Set V as status icon (running)
+                    }
+                } else
+                    Toast.makeText(getApplicationContext(),
+                            "Device cannot be used while in 'offline' state",
+                            Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        // Set the 'Automation toggle button'
+        tempLayout.getDistilleryToggleButton().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // If device id in offline state, no action should be available
+                if (tempLayout.isDeviceOnline()) {
+                    String message = sharedPreferences.getCustomTempValues(); // Set local string to hold the temperature values
+
+                    if (isChecked) {
+                        // The toggle is enabled
+                        Toast.makeText(getApplicationContext(), "Automation job started", Toast.LENGTH_LONG).show();
+                        // Publish message with relevant topic
+                        MqttService.getStaticHandleMQTT().publishMessage(topic + "/automation", "1," + message,
+                                AppConfig.RETAINED_MESSAGE);
+                        // 'Remember' that automation was published to shared preferences
+                        sharedPreferences.setAutomation(true);
+
+                    } else {
+                        // The toggle is disabled
+                        Toast.makeText(getApplicationContext(), "Automation job stopped", Toast.LENGTH_LONG).show();
+                        // Publish message with relevant topic
+                        MqttService.getStaticHandleMQTT().publishMessage(topic + "/automation", "0," + message,
+                                AppConfig.RETAINED_MESSAGE);
+                        // 'Remember' that automation was published to shared preferences
+                        sharedPreferences.setAutomation(false);
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "Device cannot be used while in 'offline' state",
+                            Toast.LENGTH_SHORT).show();
+                    // Since the above was not executed (device is offline),
+                    // The toggle got checked, so it needs to be unchecked
+                    if (isChecked)
+                        tempLayout.setDistilleryToggleButton(false);
+                    }
+            }
+        });
+
+        // Set up a new image to the layout, and set it as clickable
+        tempLayout.switchIcon1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final String tmpTopic = topic + "/ssr";
+                // Topic like "device_id/device-type/ssr
+                // Payload is 1 for first ssr
+                MqttService.getStaticHandleMQTT().publishMessage(tmpTopic,"1",
+                        AppConfig.NOT_RETAINED_MESSAGE);
+            }
+        });
+
+        // Set up a new image to the layout, and set it as clickable
+        tempLayout.switchIcon2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final String tmpTopic = topic + "/ssr";
+                // Topic like "device-id/device_type/ssr
+                // Payload is 2 for second ssr
+                MqttService.getStaticHandleMQTT().publishMessage(tmpTopic,"2",
+                        AppConfig.NOT_RETAINED_MESSAGE);
+            }
+        });
+
+        // Set up a new image to the layout, and set it as clickable
+        tempLayout.switchIcon3.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final String tmpTopic = topic + "/ssr";
+                // Topic like "device_id/device_type/ssr
+                // Payload is 3 for third ssr
+                MqttService.getStaticHandleMQTT().publishMessage(tmpTopic,"3",
+                        AppConfig.NOT_RETAINED_MESSAGE);
+            }
+        });
+
+        // Set up a new image to the layout, and set it as clickable
+        tempLayout.switchIcon4.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final String tmpTopic = topic + "/ssr";
+                // Topic like "device_id/device_type/ssr
+                // Payload is 4 for fourth ssr
+                MqttService.getStaticHandleMQTT().publishMessage(tmpTopic,"4",
+                        AppConfig.NOT_RETAINED_MESSAGE);
+            }
+        });
+
+        mainLayout.addView(tempLayout.getView());
+        // And store the device name - to the devices layout object
+        inflatedLayoutsIds.put(deviceMap.get("device_id"), tempLayout);
+    }
+
 
     /**
      * Update MQTT DB with a new pass for customers "device"
@@ -936,6 +1170,8 @@ public class MainActivity extends AppCompatActivity {
         Message showDialog =
                 uiHandler.obtainMessage(SHOW_UPDATE_SERVER_DIALOG, pDialog);
         showDialog.sendToTarget();
+
+        MqttService.stopMQTTService(getApplicationContext());
 
         String tag_activation_req = "req_update_customer_device_token";
         final SharedPreferences sharedPreferences = new SharedPreferences(getApplicationContext());
@@ -987,7 +1223,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.e(TAG, "updateCustomerDeviceWithToken Error: " + body);
                             Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
                         } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                            Log.e(TAG, e.toString());
                         }
                     }
                 }
@@ -1006,12 +1242,5 @@ public class MainActivity extends AppCompatActivity {
         // Adding request to request queue
         NetworkRequests.getInstance().addToRequestQueue(strReq, tag_activation_req, true);
     }
-
-
-    /**
-     * Return MainActivity instance
-     */
-    public static MainActivity getInstance() {
-        return mainActivityInstance;
-    }
 }
+

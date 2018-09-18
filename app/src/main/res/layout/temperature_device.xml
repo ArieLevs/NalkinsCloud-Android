@@ -6,7 +6,7 @@
     android:layout_centerInParent="true"
     android:layout_weight="0.23"
     android:gravity="center"
-    android:background="@color/gray"
+    android:background="@drawable/device_layout_border"
     android:orientation="vertical"
     android:weightSum="1">
 
@@ -187,9 +187,10 @@
 
         </LinearLayout>
     </LinearLayout>
+    <!--
     <View
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/darker_gray"/>-->
 </LinearLayout>
 

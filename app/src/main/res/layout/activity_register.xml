@@ -45,25 +45,9 @@
                 android:hint="@string/hint_last_name"
                 android:inputType="text"
                 android:textColorHint="@color/input_default_hint"
-                android:nextFocusDown="@+id/username" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/usernameWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp">
-
-            <EditText
-                android:id="@+id/username"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:digits="0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
-                android:hint="@string/hint_username"
-                android:inputType="textPersonName"
-                android:textColorHint="@color/input_default_hint"
                 android:nextFocusDown="@+id/email" />
         </android.support.design.widget.TextInputLayout>
+
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/emailWrapper"

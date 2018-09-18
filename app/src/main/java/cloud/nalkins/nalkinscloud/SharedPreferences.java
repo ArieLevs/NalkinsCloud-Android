@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
+import java.util.StringTokenizer;
+
 /**
  * Created by Arie on 3/8/2017.
  *
@@ -75,7 +77,7 @@ class SharedPreferences {
      * @return String users current refresh token
      * In case KEY_REFRESH_TOKEN = null, the String "NULL" will return
      */
-    public String getRefreshToken(){
+    String getRefreshToken(){
         String key_refresh_token = pref.getString(KEY_REFRESH_TOKEN, "NULL");
         Log.d(TAG, "Refresh Token returned " + key_refresh_token + " from shared preferences.");
         return key_refresh_token;
@@ -124,6 +126,7 @@ class SharedPreferences {
         return pref.getBoolean(KEY_MAIN_ACTIVITY, false);
     }
 
+
     /**
      * Remove current username from shared preferences
      */
@@ -137,6 +140,9 @@ class SharedPreferences {
     // Store automation job parameters
     private static final String AUTOMATION = "automation";
     private static final String AUTOMATION_ERROR = "automation_error";
+    private static final String CUSTOM_TEMP_CONFIGURED = "custom_temp_configured";
+    private static final String CUSTOM_TEMP_VALUES = "custom_temp_values";
+
     private static final String MAIN_HEATER_TEMP = "main_heater_temp";
     private static final String DISPOSAL_START_TEMP = "disposal_start_temp";
     private static final String DISPOSAL_END_TEMP = "disposal_end_temp";
@@ -168,6 +174,34 @@ class SharedPreferences {
         Boolean automation = pref.getBoolean(AUTOMATION, false);
         Log.d(TAG, "getAutomation returned: " + automation + ", from shared preferences.");
         return automation;
+    }
+
+    void setIsCustomTempConfigured(Boolean value) {
+        _editor.putBoolean(CUSTOM_TEMP_CONFIGURED, value);
+        _editor.commit();
+        Log.d(TAG, "setIsCustomTempConfigured stored: " + value + ", in shared preferences.");
+    }
+
+    boolean getIsCustomTempConfigured() {
+        Boolean customTemp = pref.getBoolean(CUSTOM_TEMP_CONFIGURED, false);
+        Log.d(TAG, "getIsCustomTempConfigured returned: " + customTemp + ", from shared preferences.");
+        return customTemp;
+    }
+
+    void setCustomTempValues(int[] values) {
+        StringBuilder str = new StringBuilder();
+        for( int value : values) {
+                str.append(value).append(",");
+        }
+        _editor.putString(CUSTOM_TEMP_VALUES, str.toString());
+        _editor.commit();
+        Log.d(TAG, "setIsCustomTempConfigured stored: " + str + ", in shared preferences.");
+    }
+
+    String getCustomTempValues() {
+        String custom_temp_values = pref.getString(CUSTOM_TEMP_VALUES, "94, 60, 80, 80");
+        Log.d(TAG, "getCustomTempValues returned: " + custom_temp_values + ", from shared preferences.");
+        return custom_temp_values;
     }
     // ####### DISTILLERY PART END ################
 

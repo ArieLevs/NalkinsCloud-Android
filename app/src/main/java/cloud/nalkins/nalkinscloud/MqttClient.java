@@ -1,6 +1,7 @@
 package cloud.nalkins.nalkinscloud;
 
 import android.content.Context;
+import android.os.Message;
 import android.util.Log;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -26,8 +27,8 @@ import java.io.UnsupportedEncodingException;
  * This class holds an object that its basically a MQTT client,
  * all request to the MQTT broker will be done through this object
  */
-class MqttClientClass {
-    private final String TAG = MqttClientClass.class.getSimpleName();
+class MqttClient {
+    private final String TAG = MqttClient.class.getSimpleName();
 
     private MqttAndroidClient _mqttAndroidClient;
     private MqttConnectOptions _mqttConnectOptions;
@@ -39,8 +40,10 @@ class MqttClientClass {
     // Object to store persistent data to memory
     private MemoryPersistence _memStore; // On Fail use MemoryStore
 
+    private final int UPDATE_DEVICE = 3;
+
     /**
-     * MqttClientClass Client Constructor,
+     * MqttClient Client Constructor,
      * This object will hold all information regarding the mqtt client,
      * In addition to the params, will hold info regarding
      * Server URI, SSL Certificate
@@ -49,8 +52,8 @@ class MqttClientClass {
      * @param clientId The username to use to connect
      * @param password The password to use to connect
      */
-    MqttClientClass(final Context context, final String clientId, String password) {
-        Log.d(TAG, "running 'MqttClientClass' constructor");
+    MqttClient(final Context context, final String clientId, String password) {
+        Log.d(TAG, "running 'MqttClient' constructor");
         //this._context = context;
         // Create new session manager object
         _sharedPreferences = new SharedPreferences(context);
@@ -99,22 +102,24 @@ class MqttClientClass {
             // Do when connection lost
             @Override
             public void connectionLost(Throwable cause) {
-                Log.d(TAG, "Connection to " + AppConfig.MQTT_SERVER_URI + " lost, setAutomaticReconnect function should be 'true'");
+                Log.d(TAG, "Connection to " +
+                        AppConfig.MQTT_SERVER_URI +
+                        " lost, setAutomaticReconnect function should be 'true'");
             }
 
             // Do when message arrived
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                Log.d(TAG, "Message Arrived: " + topic + " Message: " + new String(message.getPayload()));
+                String payload = new String(message.getPayload());
+                Log.d(TAG, "Message Arrived: " + topic + " Message: " + payload);
 
-                // If Main Activity is running, then forward message to main activity UI
-                if(_sharedPreferences.getIsMainActivityRunning()) {
-                    // Send incoming message to 'handleIncomingMessages' function (in Main Activity)
-                    MainActivity.getInstance().handleIncomingMessages(topic, new String(message.getPayload()));
-                }
-                // If Main Activity is not running, no UI update is needed, only add notification
-                else
-                    NotificationHandler.identifyNotificationRequest(context, topic, new String(message.getPayload()));
+                // Send message to UI at MainActivity
+                Message msg = MainActivity.uiHandler.obtainMessage();
+                msg.what = UPDATE_DEVICE;
+                msg.obj = topic + "-" + payload;
+                MainActivity.uiHandler.sendMessage(msg);
+
+                NotificationHandler.identifyNotificationRequest(context, topic, new String(message.getPayload()));
             }
 
             @Override
@@ -324,20 +329,16 @@ class MqttClientClass {
         if(isClientConnected()) {
             try {
                 byte[] encodedPayload = payload.getBytes("UTF-8");
-                //MqttMessage message = new MqttMessage(encodedPayload);
-                //message.setQos(AppConfig.MESSAGE_QOS);
-                //message.setRetained(true);
-                //this._mqttAndroidClient.publish(topic, message);
 
-            /*
-             * Parameters for 'publish' function:
-             * @topic - to deliver the message to, for example "testdeviceid/special/temperature".
-             * @payload - the byte array to use as the payload
-             * @qos - the Quality of Service to deliver the message at. Valid values are 0, 1 or 2.
-             * @retained - whether or not this message should be retained by the server.
-             * @userContext - optional object used to pass context to the callback. Use null if not required.
-             * @callback - optional listener that will be notified when message delivery hsa completed to the requested quality of service
-             */
+                /*
+                 * Parameters for 'publish' function:
+                 * @topic - to deliver the message to, for example "testdeviceid/special/temperature".
+                 * @payload - the byte array to use as the payload
+                 * @qos - the Quality of Service to deliver the message at. Valid values are 0, 1 or 2.
+                 * @retained - whether or not this message should be retained by the server.
+                 * @userContext - optional object used to pass context to the callback. Use null if not required.
+                 * @callback - optional listener that will be notified when message delivery hsa completed to the requested quality of service
+                 */
                 IMqttToken publishToken = this._mqttAndroidClient.publish(topic, encodedPayload, AppConfig.MESSAGE_QOS_1,
                         isRetainedMessage);
 
@@ -363,7 +364,7 @@ class MqttClientClass {
                 Log.e(TAG, "Error on publish attempt: " + e.toString());
             }
         } else {
-            Log.e(TAG, "Error on publish attempt: MQTT not conencted");
+            Log.e(TAG, "Error on publish attempt: MQTT not connected");
         }
     }
 

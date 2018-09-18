@@ -71,7 +71,7 @@ public class DeviceConfigurationHandler extends AppCompatActivity {
             public void handleMessage(Message inputMessage) {
                 switch (inputMessage.what) {
                     case SHOW_CONFIGURE_DIALOG:
-                        pDialog.setMessage("Configuring CloudBit device ...");
+                        pDialog.setMessage("Configuring " + AppConfig.APP_NAME + " device ...");
                         Functions.showDialog(pDialog);
                         break;
                     case HIDE_DIALOG:
@@ -119,6 +119,7 @@ public class DeviceConfigurationHandler extends AppCompatActivity {
      */
     public void getDevicePasswordFromServer(String device_id) {
         Log.d(TAG, "Starting 'getDevicePasswordFromServer'");
+        Log.d(TAG, "Processing device: " + device_id);
         Message showDialog =
                 uiHandler.obtainMessage(SHOW_CONFIGURE_DIALOG, pDialog);
         showDialog.sendToTarget();
@@ -213,7 +214,7 @@ public class DeviceConfigurationHandler extends AppCompatActivity {
             public void run() {
                 Message hideDialog = uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
 
-                MqttClientClass handleMQTT = new MqttClientClass(getApplicationContext(),
+                MqttClient handleMQTT = new MqttClient(getApplicationContext(),
                         DeviceAddNewActivity.getDeviceId(), devicePassword);
                 handleMQTT.connectToMQTTServer();
                 try {

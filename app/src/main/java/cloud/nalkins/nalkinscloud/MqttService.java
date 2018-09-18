@@ -29,12 +29,11 @@ public class MqttService extends Service {
     private static final String ACTION_STOP = "STOP"; // stop MqttService
     private static final String ACTION_RECONNECT = "RECONNECT"; // reconnect MqttService
 
-    private boolean isClientStarted = false; // Is the Client started?
     private Handler _connectionHandler; // Separate Handler thread for networking
 
-    private static MqttClientClass mqttClient; // Mqtt Client
+    private static MqttClient mqttClient; // Mqtt Client
 
-    public static MqttClientClass getStaticHandleMQTT() {
+    public static MqttClient getStaticHandleMQTT() {
         return mqttClient;
     }
 
@@ -133,8 +132,8 @@ public class MqttService extends Service {
      * Using ConnectivityManager.CONNECTIVITY_ACTION BroadcastReceiver
      */
     private synchronized void start() {
-        if(isClientStarted || mqttClient != null) {
-            Log.d(TAG,"Attempt to start while service is running");
+        if(mqttClient != null) {
+            Log.d(TAG,"Attempt to create mqttClient while service is running");
             if(mqttClient.isClientConnected())
                 Log.d(TAG,"Attempt to connect to MQTT broker while already connected");
             else
@@ -153,10 +152,6 @@ public class MqttService extends Service {
      * Stop the Mqtt client
      */
     private synchronized void stop() {
-        if(!isClientStarted) {
-            Log.d(TAG,"Attempting to stop connection that is not running");
-            return;
-        }
         if(mqttClient != null) {
             _connectionHandler.post(new Runnable() {
                 @Override
@@ -168,10 +163,12 @@ public class MqttService extends Service {
                         Log.e(TAG, e.toString());
                     }
                     mqttClient = null;
-                    Log.d(TAG,"Setting isClientStarted (MQTT) to false");
-                    isClientStarted = false;
+                    Log.d(TAG,"Setting mqttClient to null");
                 }
             });
+        } else {
+            Log.d(TAG,"Attempting to stop mqttClient connection that is not running");
+            return;
         }
         unregisterReceiver(mConnectivityReceiver);
     }
@@ -182,14 +179,13 @@ public class MqttService extends Service {
      */
     private synchronized void connect() {
         Log.d(TAG, "Running 'connect' function. Current user name is:" + sharedPreferences.getUsername());
-        mqttClient = new MqttClientClass(getApplicationContext(), sharedPreferences.getUsername(), sharedPreferences.getToken());
+        mqttClient = new MqttClient(getApplicationContext(), sharedPreferences.getUsername(), sharedPreferences.getToken());
 
         _connectionHandler.post(new Runnable() {
             @Override
             public void run() {
                 mqttClient.connectToMQTTServer();
                 Log.d(TAG, "Setting isClientStarted (MQTT) to true");
-                isClientStarted = true;
             }
         });
     }
@@ -199,7 +195,7 @@ public class MqttService extends Service {
      * Check current connectivity and reconnect
      */
     private synchronized void reconnectIfNecessary() {
-        if(isClientStarted && mqttClient == null) {
+        if(mqttClient == null) {
             connect();
         }
     }

@@ -23,6 +23,7 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
@@ -218,7 +219,7 @@ public class LogoActivity extends AppCompatActivity {
                     // JSON error
                     Log.d(TAG, "Refresh Token error: " + e.toString());
                     Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    finish();
+                    lunchLoginActivity();
                 }
                 hideDialog.sendToTarget();
             }

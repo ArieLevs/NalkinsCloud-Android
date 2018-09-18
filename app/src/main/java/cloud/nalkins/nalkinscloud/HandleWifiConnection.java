@@ -359,7 +359,6 @@ public class HandleWifiConnection extends AppCompatActivity {
         mNetworkCallback = new ConnectivityManager.NetworkCallback() {
             @Override
             public void onAvailable(final Network network) {
-                Log.d(TAG, "BLAAAAAAAAAAAAAa");
                 setupWifiManager(context);
                 if (getWifiManager().getConnectionInfo().getSSID().equals(AppConfig.DEVICE_AP_SSID)) {
                     if (!mConnectivityManager.bindProcessToNetwork(network)) {
@@ -385,7 +384,6 @@ public class HandleWifiConnection extends AppCompatActivity {
 
         // requires android.permission.CHANGE_NETWORK_STATE
         mConnectivityManager.requestNetwork(request, mNetworkCallback);
-
     }
 
     private void releaseDeviceWifiNetwork() {

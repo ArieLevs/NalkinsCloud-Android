@@ -17,7 +17,6 @@
     <string name="do_not_have_account">Don\'t have an account yet?</string>
 
     <!-- Registration Success Activity -->
-    <string name="btn_register_confirm">Go It</string>
     <string name="register_success_title">Welcome to NalkinsCloud</string>
     <string name="register_success_guide">Confirmation email sent to the email you have registered with,
     In order to successfully activate NalkinsCloud account Please confirm email first</string>
@@ -25,6 +24,14 @@
     <!-- Forgot Password Activity -->
     <string name="add_email">Please Enter Email Address You Registered With</string>
     <string name="reset_password">RESET PASSWORD</string>
+
+    <!-- Forgot Password Complete Activity -->
+    <string name="forgot_pass_complete_title">NalkinsCloud Password Reset</string>
+    <string name="forgot_pass_complete_guide">Process completed,
+        If account exist with the email you provided,
+        You should receive an email with instructions soon.
+        If no email received, please make sure you have entered correct email,
+        And check spam directory</string>
 
     <!-- Restart Password Activity -->
     <string name="current_pass">Current Password</string>
@@ -115,6 +122,7 @@
 
     <!-- Global Strings -->
     <string name="btn_next">Next</string>
+    <string name="btn_register_confirm">Go It</string>
 
     <!-- Magnet Device -->
 

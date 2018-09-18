@@ -3,6 +3,9 @@ package cloud.nalkins.nalkinscloud;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -48,10 +51,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  */
 public class DateTimePickerActivity extends AppCompatActivity {
-    private static final String TAG = LoginActivity.class.getSimpleName(); //Set TAG for logs
+    private static final String TAG = DateTimePickerActivity.class.getSimpleName(); //Set TAG for logs
 
     DatePickerDialog datePickerDialog;
     SharedPreferences sharedPreferences;
+
+    private ProgressDialog pDialog; // 'Processing' dialog
+    static Handler uiHandler;
+    final int SHOW_UPDATE_SERVER_DIALOG = 1;
+    final int HIDE_DIALOG = 0;
 
     // Define AtomicBoolean since we need to use it in an inner class
     // Holds a boolean indication if the 'Once' or 'Repeat' selected
@@ -69,13 +77,13 @@ public class DateTimePickerActivity extends AppCompatActivity {
 
     private SparseArray<String> dayOfWeekArray = new SparseArray<String>() {
         {
-            append(0,"Sunday");
-            append(1,"Monday");
-            append(2,"Tuesday");
-            append(3,"Wednesday");
-            append(4,"Thursday");
-            append(5,"Friday");
-            append(6,"Saturday");
+            append(0,"sunday");
+            append(1,"monday");
+            append(2,"tuesday");
+            append(3,"wednesday");
+            append(4,"thursday");
+            append(5,"friday");
+            append(6,"saturday");
         }
     };
 
@@ -113,6 +121,26 @@ public class DateTimePickerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_date_time_picker);
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out); // Set animation when activity starts/ends
+
+        // Progress dialog
+        pDialog = new ProgressDialog(this);
+        pDialog.setCancelable(false);
+
+        // Set UI Handler to send actions to UI
+        uiHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message inputMessage) {
+                switch (inputMessage.what) {
+                    case SHOW_UPDATE_SERVER_DIALOG:
+                        pDialog.setMessage("Setting up Job ...");
+                        Functions.showDialog(pDialog);
+                        break;
+                    case HIDE_DIALOG:
+                        Functions.hideDialog(pDialog);
+                        break;
+                }
+            }
+        };
 
         // Get current time, and set it to each of the date \ time vars
         // These variables will be user later to remember calendar pickers
@@ -498,15 +526,14 @@ public class DateTimePickerActivity extends AppCompatActivity {
      */
     private void sendScheduleToServer(){
         Log.d(TAG, "Running 'sendScheduleToServer' function");
-
-        // Progress dialog
-        final ProgressDialog pDialog = new ProgressDialog(this);
-        pDialog.setCancelable(false);
-
         String tag_registration_req = "req_scheduled_job";
 
-        pDialog.setMessage("Setting scheduled job");
-        Functions.showDialog(pDialog);
+        Message showDialog =
+                uiHandler.obtainMessage(SHOW_UPDATE_SERVER_DIALOG, pDialog);
+        showDialog.sendToTarget();
+
+        final Message hideDialog =
+                uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
 
         sharedPreferences = new SharedPreferences(getApplicationContext());
 
@@ -516,7 +543,7 @@ public class DateTimePickerActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d(TAG, "Scheduled job Response: " + response.toString());
-                Functions.hideDialog(pDialog);
+                hideDialog.sendToTarget();
 
                 try {
                     String status = response.getString("status");
@@ -533,8 +560,7 @@ public class DateTimePickerActivity extends AppCompatActivity {
                     }
                 } catch (JSONException e) {
                     // JSON error
-                    e.printStackTrace();
-                    Log.d(TAG, "Json error: " + e.toString());
+                    Log.e(TAG, e.toString());
                     Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
@@ -561,12 +587,11 @@ public class DateTimePickerActivity extends AppCompatActivity {
                             Log.e(TAG, "Scheduled job Error: " + body);
                             Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
                         } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
                             Log.e(TAG, e.toString());
                         }
                     }
                 }
-                Functions.hideDialog(pDialog);
+                hideDialog.sendToTarget();
             }
         }) {
             @Override
@@ -638,15 +663,13 @@ public class DateTimePickerActivity extends AppCompatActivity {
             scheduledJobJsonObject.put("app_params", jsonObjectAppParams);
             scheduledJobJsonObject.put("repeated_job", jsonObjectRepeatJob);
             scheduledJobJsonObject.put("job_action", isStartJobActionSelected.get());
-            scheduledJobJsonObject.put("start_date_time_values", jsonObjectStartDateTimeValues);
-            scheduledJobJsonObject.put("end_date_time_values", jsonObjectEndDateTimeValues);
+            scheduledJobJsonObject.put("start_date_time", jsonObjectStartDateTimeValues);
+            scheduledJobJsonObject.put("end_date_time", jsonObjectEndDateTimeValues);
 
             /*
             Final Json object should look like this:
                 {
                    "app_params": {
-                      "client_secret": "",
-                      "access_token": "",
                       "device_id": "",
                       "topic": ""
                    },
@@ -663,11 +686,11 @@ public class DateTimePickerActivity extends AppCompatActivity {
                       }
                    },
                    "job_action": true,
-                   "start_date_time_values": {
+                   "start_date_time": {
                       "start_date_time_selected": true,
                       "start_date_time_values": "2017-05-31 17:31:00+0300"
                    },
-                   "end_date_time_values": {
+                   "end_date_time": {
                       "end_date_time_selected": false,
                       "end_date_time_values": "2017-05-21 17:31:00+0300"
                    }

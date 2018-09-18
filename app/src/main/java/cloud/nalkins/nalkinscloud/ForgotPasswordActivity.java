@@ -1,6 +1,7 @@
 package cloud.nalkins.nalkinscloud;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -25,11 +26,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * Created by Arie on 12/31/2017.
  *
  */
-
 public class ForgotPasswordActivity extends AppCompatActivity {
     private static final String TAG = ForgotPasswordActivity.class.getSimpleName();
     private ProgressDialog pDialog;
@@ -76,6 +77,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         });
     }
 
+
     /**
      * Send server request to reset password
      * @param email the email address to reset
@@ -112,8 +114,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     if (status.equals("success")) {
                         Toast.makeText(getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
 
-                        // Back to previous activity
-                        finish();
+                        // Run registration success activity
+                        Intent intent = new Intent(getApplicationContext(),
+                                ForgotPasswordCompleteActivity.class);
+                        startActivity(intent);
 
                     } else {
                         Toast.makeText(getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();

@@ -1,0 +1,75 @@
+title Add new device
+
+note left of App: Start add device activity 
+note right of App
+    Scan wifi networks around
+    if requested SSID found continue to connectToDevice()
+end note
+note left of App
+    Start connection to device AP
+    If app connected successfuly to SSID
+    continue to getDeviceIdFromDevice()
+end note
+App->Device: Send request to /returnid
+Device->App: Return device id
+note left of App
+    Disconnect from device AP
+    and forget the network
+end note
+note right of App: Start SetDeviceNameActivity
+note left of App
+    User inputs name for device
+    Continue to GetWifiCredentialsActivity
+end note
+note right of App
+    User inputs wifi credentials for the device to connect to
+    Continue to HandleDeviceConfiguration
+end note
+note left of App: User confirms final configurations
+App->Web API server: Send request to /get_device_pass
+note over App,Web API server: Json params contain client_secret, device_id, access_token
+note right of Web API server
+    Authenticate client
+    If current device does not have an owner
+end note
+note right of Web API server: Generate 8 char hashed password
+note left of  Web API server: Update password for device in 'devices'
+Web API server->App: Return device password
+note left of App
+    Start connection to device AP
+    If app connected successfuly to SSID
+    continue to configureDevice()
+end note
+App->Device: Send request to /autoconfig
+note over App,Device: Json params contain ssid, wifi_pass, mqtt_server, mqtt_port, device_pass
+Device->App: Return message that configurations received
+note left of Device:
+    This action will be performed twice
+    Since the ESP8266 device cannot use 2 chanels at a time
+    A second request will be sent to retrieve the device connection check
+end note
+note right of Device
+    Conenct to provided SSID (wifi)
+    set wifiSuccessfulConnection = true
+    Write wifi configurations to EEPROM
+end note
+Device->MQTT Broker: Send connection request
+MQTT Broker->Device: Ack connection
+note left of Device
+    Set mqttSuccessfulConnection = true
+    Write MQTT configurations to EEPROM
+end note
+App->Device: Send request to /autoconfig_response
+Device->App: Return connection status
+note left of App: Activation successfully completed
+App->Web API server: Send request to /activation
+note right of Web API server
+    Authenticate client
+    If current device does not have an owner
+end note
+note left of  Web API server: Insert device into 'customer_devices'
+note right of  Web API server
+    Insert into 'acls' record for device
+     Insert into 'acls' record for user
+end note
+Web API server->App: Return status

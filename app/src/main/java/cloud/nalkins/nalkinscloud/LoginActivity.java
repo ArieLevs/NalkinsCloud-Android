@@ -81,12 +81,12 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out); // Set animation when activity starts/ends
 
-        //Set username email text fields
-        final TextInputLayout usernameWrapper = (TextInputLayout) findViewById(R.id.usernameWrapper);
+        //Set email email text fields
+        final TextInputLayout emailWrapper = (TextInputLayout) findViewById(R.id.emailWrapper);
         final TextInputLayout passwordWrapper = (TextInputLayout) findViewById(R.id.passwordWrapper);
 
         //Set error hints when validation fail
-        usernameWrapper.setHint("Username");
+        emailWrapper.setHint("Email");
         passwordWrapper.setHint("Password");
 
         //Set login register forgot buttons
@@ -123,20 +123,20 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 hideKeyboard();
 
-                // Get the username and data from text fields
-                String username = usernameWrapper.getEditText().getText().toString();
+                // Get the email and data from text fields
+                String email = emailWrapper.getEditText().getText().toString();
                 String password = passwordWrapper.getEditText().getText().toString();
 
                 passwordWrapper.setErrorEnabled(false); //Set password error to false
-                if (Functions.validateUsername(username)) { // If username is valid then
-                    usernameWrapper.setErrorEnabled(false); //Set email error to false
+                if (Functions.validateEmail(email)) { // If email is valid then
+                    emailWrapper.setErrorEnabled(false); //Set email error to false
                     if (Functions.isValidPassword(password)) { // If password name is valid then
                         passwordWrapper.setErrorEnabled(false);
-                        requestNewAccessToken(username, password); //Perform login operation
+                        requestNewAccessToken(email, password); //Perform login operation
                     } else
                         passwordWrapper.setError("Not a valid password!");
                 } else
-                    usernameWrapper.setError("Invalid username");
+                    emailWrapper.setError("Invalid email");
 
                 //If validation failed for 3 times, then
                 loginAttemptCounter--;
@@ -237,18 +237,23 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.LENGTH_LONG).show();
                 } else {
                     String body;
-                    //get status code here
-                    String statusCode = String.valueOf(error.networkResponse.statusCode);
-                    Log.e(TAG, "Server response code: " + statusCode);
+                    try {
+                        //get status code here
+                        String statusCode = String.valueOf(error.networkResponse.statusCode);
+                        Log.e(TAG, "Server response code: " + statusCode);
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+
                     //get response body and parse with appropriate encoding
-                    if (error.networkResponse.data != null) {
-                        try {
-                            body = new String(error.networkResponse.data, "UTF-8");
-                            Log.e(TAG, "Login Error: " + body);
-                            Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
+                    try {
+                        body = new String(error.networkResponse.data, "UTF-8");
+                        Log.e(TAG, "Login Error: " + body);
+                        Toast.makeText(getApplicationContext(),
+                                "Wrong credentials or email was not verified",
+                                Toast.LENGTH_LONG).show();
+                    } catch (UnsupportedEncodingException | NullPointerException e) {
+                        e.printStackTrace();
                     }
                 }
                 hideDialog.sendToTarget();

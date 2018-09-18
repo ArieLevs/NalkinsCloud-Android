@@ -27,6 +27,8 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
+import static cloud.nalkins.nalkinscloud.AppConfig.ENVIRONMENT;
+
 /**
  * Created by Arie on 3/8/2017.
  *
@@ -77,6 +79,8 @@ public class NetworkRequests extends Application {
      * @return An RequestQueue object, depending on the param 'isSSLMode'
      */
     public RequestQueue getRequestQueue(boolean isSSLMode) {
+        if (ENVIRONMENT.equals("dev"))
+            isSSLMode = false;
         if(isSSLMode) {
             if (encryptedRequestQueue == null)
                 encryptedRequestQueue = Volley.newRequestQueue(getApplicationContext(), hurlStack);

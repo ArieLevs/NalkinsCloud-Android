@@ -72,7 +72,6 @@ public class RegisterActivity extends AppCompatActivity {
         //Set name email and password text fields
         final TextInputLayout first_nameWrapper = (TextInputLayout) findViewById(R.id.first_nameWrapper);
         final TextInputLayout last_nameWrapper = (TextInputLayout) findViewById(R.id.last_nameWrapper);
-        final TextInputLayout usernameWrapper = (TextInputLayout) findViewById(R.id.usernameWrapper);
         final TextInputLayout emailWrapper = (TextInputLayout) findViewById(R.id.emailWrapper);
         final TextInputLayout passwordWrapper = (TextInputLayout) findViewById(R.id.passwordWrapper);
         final TextInputLayout validate_passwordWrapper = (TextInputLayout) findViewById(R.id.validate_passwordWrapper);
@@ -80,7 +79,6 @@ public class RegisterActivity extends AppCompatActivity {
         //Set error hints when validation fail
         first_nameWrapper.setHint("First Name");
         last_nameWrapper.setHint("Last Name");
-        usernameWrapper.setHint("Username");
         emailWrapper.setHint("Email");
         passwordWrapper.setHint("Password");
         validate_passwordWrapper.setHint("Validate Password");
@@ -99,7 +97,6 @@ public class RegisterActivity extends AppCompatActivity {
 
                 String first_name = first_nameWrapper.getEditText().getText().toString();
                 String last_name = last_nameWrapper.getEditText().getText().toString();
-                String username = usernameWrapper.getEditText().getText().toString();
                 String email = emailWrapper.getEditText().getText().toString();
                 String password = passwordWrapper.getEditText().getText().toString();
                 String validate_password = validate_passwordWrapper.getEditText().getText().toString();
@@ -116,8 +113,6 @@ public class RegisterActivity extends AppCompatActivity {
                              last_nameWrapper.setErrorEnabled(false);
                              if (last_name.length() >= 2 && last_name.length() <= 32) { // Check if last name is valid
                                  last_nameWrapper.setErrorEnabled(false);
-                                 if (Functions.validateUsername(username)) { // Check if username is valid
-                                     usernameWrapper.setErrorEnabled(false);
                                      if ((Functions.validateEmail(email))) { // Check if email valid
                                          emailWrapper.setErrorEnabled(false);
                                          if ((Functions.isValidPassword(password))) { // Check if password valid
@@ -126,7 +121,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                  validate_passwordWrapper.setErrorEnabled(false);
                                                  if (password.equals(validate_password)) { // Check if both passwords math
                                                      Log.d(TAG, "Validation form passed");
-                                                     doRegistration(first_name, last_name, username, email, password); // Start registration process
+                                                     doRegistration(first_name, last_name, email, password); // Start registration process
                                                  } else
                                                      Toast.makeText(getApplicationContext(), "Password does not match", Toast.LENGTH_SHORT).show();
                                              } else
@@ -135,8 +130,7 @@ public class RegisterActivity extends AppCompatActivity {
                                              passwordWrapper.setError("Not a valid password!");
                                      } else
                                          emailWrapper.setError("Invalid email");
-                                 } else
-                                 usernameWrapper.setError("Invalid username, 6 character at least");
+
                              } else
                                  last_nameWrapper.setError("Last name must be 2 - 32 characters long");
                          } else
@@ -155,11 +149,10 @@ public class RegisterActivity extends AppCompatActivity {
      *
      * @param firstName inputted first name
      * @param lastName inputted last name
-     * @param username inputted username
      * @param email inputted email
      * @param password inputted password
      */
-    private void doRegistration(String firstName, String lastName, String username, String email, String password) {
+    private void doRegistration(String firstName, String lastName, String email, String password) {
         Log.d(TAG, "Running 'doRegistration' function");
         String tag_registration_req = "req_registration";
 
@@ -171,7 +164,6 @@ public class RegisterActivity extends AppCompatActivity {
         params.put("client_secret", AppConfig.OAUTH_CLIENT_SECRET);
         params.put("first_name", firstName);
         params.put("last_name", lastName);
-        params.put("username", username);
         params.put("email", email);
         params.put("password", password);
 
@@ -219,19 +211,24 @@ public class RegisterActivity extends AppCompatActivity {
 
                     String body;
                     //get status code here
-                    String statusCode = String.valueOf(error.networkResponse.statusCode);
-                    Log.e(TAG, "Server response code: " + statusCode);
-                    Toast.makeText(getApplicationContext(), statusCode, Toast.LENGTH_LONG).show();
-                    //get response body and parse with appropriate encoding
-                    if (error.networkResponse.data != null) {
-                        try {
-                            body = new String(error.networkResponse.data, "UTF-8");
-                            Log.e(TAG, "Login Error: " + body);
-                            Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                    try {
+                        String statusCode = String.valueOf(error.networkResponse.statusCode);
+                        Log.e(TAG, "Server response code: " + statusCode);
+                        Toast.makeText(getApplicationContext(), statusCode, Toast.LENGTH_LONG).show();
+
+                        if (error.networkResponse.data != null) {
+                            try {
+                                body = new String(error.networkResponse.data, "UTF-8");
+                                Log.e(TAG, "Login Error: " + body);
+                                Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
                         }
+                    } catch (NullPointerException e) {
+                        Log.e(TAG, "Login Error: " + e.toString());
                     }
+
                 }
                 Functions.hideDialog(pDialog);
             }

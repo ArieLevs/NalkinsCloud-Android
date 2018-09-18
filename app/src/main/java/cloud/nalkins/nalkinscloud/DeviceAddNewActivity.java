@@ -150,7 +150,7 @@ public class DeviceAddNewActivity extends AppCompatActivity {
         // If user provided location permission then scan for networks
         if (locationPermFlag) {
             Log.d(TAG, "Starting wifi networks scan");
-            //HandleWifiConnection.setupWifiManager(getApplicationContext());
+            HandleWifiConnection.setupWifiManager(getApplicationContext());
             // Initiate a wifi scan
             HandleWifiConnection.scanWifiNetworks(getApplicationContext());
 
