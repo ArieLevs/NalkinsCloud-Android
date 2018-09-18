@@ -49,6 +49,13 @@ public class LogoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logo);
 
+        try {
+            AppConfig.readProperties(getApplicationContext());
+        } catch (IOException e) {
+            Log.e(TAG, "ERROR - Failed to read properties file");
+            e.printStackTrace();
+        }
+
         // Session manager
         sharedPreferences = new SharedPreferences(getApplicationContext());
 

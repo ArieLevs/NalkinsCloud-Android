@@ -3,3 +3,5 @@
 app.iml
 app-app.iml
 proguard-rules.pro
+./src/main/assets/alpha.properties
+./src/main/assets/production.properties
