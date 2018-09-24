@@ -37,6 +37,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import cloud.nalkins.nalkinscloud.addNewDevice.DeviceAddNewActivity;
+import cloud.nalkins.nalkinscloud.deviceLayouts.DynamicLayoutDistillery;
+import cloud.nalkins.nalkinscloud.deviceLayouts.DynamicLayoutDistilleryTemperatureSet;
+import cloud.nalkins.nalkinscloud.deviceLayouts.DynamicLayoutMagnet;
+import cloud.nalkins.nalkinscloud.deviceLayouts.DynamicLayoutSwitch;
+import cloud.nalkins.nalkinscloud.deviceLayouts.DynamicLayoutTemperature;
+import cloud.nalkins.nalkinscloud.login.LoginActivity;
+import cloud.nalkins.nalkinscloud.userAccount.ResetPassActivity;
+
 import static org.json.JSONObject.NULL;
 
 /**
@@ -51,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private ProgressDialog pDialog; // 'Processing' dialog
 
-    static Handler uiHandler;
+    public static Handler uiHandler;
     final int UPDATE_DEVICE_UI = 3;
     final int SHOW_GET_DEVICES_DIALOG = 2;
     final int SHOW_UPDATE_SERVER_DIALOG = 1;

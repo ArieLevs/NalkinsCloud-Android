@@ -11,6 +11,8 @@ import android.util.Log;
 
 import java.util.StringTokenizer;
 
+import cloud.nalkins.nalkinscloud.login.LogoActivity;
+
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**

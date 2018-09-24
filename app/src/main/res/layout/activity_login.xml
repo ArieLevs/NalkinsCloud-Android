@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context="cloud.nalkins.nalkinscloud.LoginActivity"
+    tools:context="cloud.nalkins.nalkinscloud.login.LoginActivity"
     android:orientation="vertical">
 
 

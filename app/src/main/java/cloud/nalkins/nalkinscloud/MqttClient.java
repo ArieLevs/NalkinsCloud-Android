@@ -27,7 +27,7 @@ import java.io.UnsupportedEncodingException;
  * This class holds an object that its basically a MQTT client,
  * all request to the MQTT broker will be done through this object
  */
-class MqttClient {
+public class MqttClient {
     private final String TAG = MqttClient.class.getSimpleName();
 
     private MqttAndroidClient _mqttAndroidClient;
@@ -40,7 +40,7 @@ class MqttClient {
     // Object to store persistent data to memory
     private MemoryPersistence _memStore; // On Fail use MemoryStore
 
-    private final int UPDATE_DEVICE = 3;
+    private final int UPDATE_DEVICE_UI = 3;
 
     /**
      * MqttClient Client Constructor,
@@ -52,7 +52,7 @@ class MqttClient {
      * @param clientId The username to use to connect
      * @param password The password to use to connect
      */
-    MqttClient(final Context context, final String clientId, String password) {
+    public MqttClient(final Context context, final String clientId, String password) {
         Log.d(TAG, "running 'MqttClient' constructor");
         //this._context = context;
         // Create new session manager object
@@ -115,7 +115,7 @@ class MqttClient {
 
                 // Send message to UI at MainActivity
                 Message msg = MainActivity.uiHandler.obtainMessage();
-                msg.what = UPDATE_DEVICE;
+                msg.what = UPDATE_DEVICE_UI;
                 msg.obj = topic + "-" + payload;
                 MainActivity.uiHandler.sendMessage(msg);
 
@@ -150,7 +150,7 @@ class MqttClient {
     /**
      * Connect the client to the MQTT server
      */
-    void connectToMQTTServer() {
+    public void connectToMQTTServer() {
         Log.d(TAG, "Running 'connectToMQTTServer' Function");
 
         if(this._mqttAndroidClient.isConnected()) { // First check if the client is already connected
@@ -198,7 +198,7 @@ class MqttClient {
     /**
      * Disconnect the client from the MQTT server
      */
-    void disconnectMQTTClient() {
+    public void disconnectMQTTClient() {
         Log.d(TAG, "Running 'disconnectMQTTClient' Function");
 
         if(this.isClientConnected()) { // First check if the client is connected
@@ -239,7 +239,7 @@ class MqttClient {
      *
      * @return true if connected, false otherwise
      */
-    boolean isClientConnected () {
+    public boolean isClientConnected () {
         Log.d(TAG, "Running 'isClientConnected': " + this._mqttAndroidClient.isConnected());
         return  this._mqttAndroidClient.isConnected();
     }

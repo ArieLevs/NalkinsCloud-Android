@@ -1,4 +1,4 @@
-package cloud.nalkins.nalkinscloud;
+package cloud.nalkins.nalkinscloud.userAccount;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -26,6 +26,11 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+
+import cloud.nalkins.nalkinscloud.AppConfig;
+import cloud.nalkins.nalkinscloud.Functions;
+import cloud.nalkins.nalkinscloud.NetworkRequests;
+import cloud.nalkins.nalkinscloud.R;
 
 /**
  * Created by Arie on 3/8/2017.

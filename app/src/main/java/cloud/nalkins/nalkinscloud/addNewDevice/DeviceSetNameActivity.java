@@ -1,4 +1,4 @@
-package cloud.nalkins.nalkinscloud;
+package cloud.nalkins.nalkinscloud.addNewDevice;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,10 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import cloud.nalkins.nalkinscloud.Functions;
+import cloud.nalkins.nalkinscloud.MainActivity;
+import cloud.nalkins.nalkinscloud.R;
 
 /**
  * Created by Arie on 4/9/2017.

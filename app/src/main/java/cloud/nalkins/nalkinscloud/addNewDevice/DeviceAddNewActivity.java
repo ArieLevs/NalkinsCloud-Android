@@ -1,4 +1,4 @@
-package cloud.nalkins.nalkinscloud;
+package cloud.nalkins.nalkinscloud.addNewDevice;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -37,6 +37,12 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+
+import cloud.nalkins.nalkinscloud.AppConfig;
+import cloud.nalkins.nalkinscloud.Functions;
+import cloud.nalkins.nalkinscloud.HandleWifiConnection;
+import cloud.nalkins.nalkinscloud.NetworkRequests;
+import cloud.nalkins.nalkinscloud.R;
 
 /**
  * Created by Arie on 4/8/2017.
@@ -194,7 +200,12 @@ public class DeviceAddNewActivity extends AppCompatActivity {
 
                             // Create vibrate
                             Vibrator vibrator = (Vibrator)getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-                            vibrator.vibrate(150);
+                            try {
+                                vibrator.vibrate(150);
+                            } catch (NullPointerException e) {
+                                e.printStackTrace();
+                            }
+
 
                             // Make sound
                             ToneGenerator toneGen = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);

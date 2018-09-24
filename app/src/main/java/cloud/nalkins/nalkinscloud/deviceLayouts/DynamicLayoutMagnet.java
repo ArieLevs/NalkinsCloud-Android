@@ -1,4 +1,4 @@
-package cloud.nalkins.nalkinscloud;
+package cloud.nalkins.nalkinscloud.deviceLayouts;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -8,13 +8,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import cloud.nalkins.nalkinscloud.R;
+
 /**
  * Created by Arie on 4/25/2017.
  *
  * This class is basically a object that represents a layout,
  * This object will allow to modify the layout programmatically
  */
-class DynamicLayoutMagnet {
+public class DynamicLayoutMagnet {
 
     Context context;
 
@@ -42,7 +44,7 @@ class DynamicLayoutMagnet {
      * @param deviceName Name of this object
      * @param deviceType Type of this object
      */
-    DynamicLayoutMagnet(Context context, String deviceId, String deviceType, String deviceName) {
+    public DynamicLayoutMagnet(Context context, String deviceId, String deviceType, String deviceName) {
 
         this.context = context; // Layout context
 
@@ -75,18 +77,18 @@ class DynamicLayoutMagnet {
     }
 
     // Function sets icon for the layout
-    void setDeviceIcon(int iconId) {
+    public void setDeviceIcon(int iconId) {
         this.deviceIcon.setImageResource(iconId);
     }
-    ImageView getDeviceIcon() {
+    public ImageView getDeviceIcon() {
         return deviceIcon;
     }
 
-    LinearLayout getDeviceOptionsLayout() {
+    public LinearLayout getDeviceOptionsLayout() {
         return this.deviceOptionsLayout;
     }
 
-    void setWifiSignalStrengthIcon(int iconId) {
+    public void setWifiSignalStrengthIcon(int iconId) {
         this.wifiSignalStrengthIcon.setImageResource(iconId);
     }
     ImageView getWifiSignalStrengthIcon() {
@@ -95,33 +97,33 @@ class DynamicLayoutMagnet {
 
 
     // Function set 'Triggered' or 'Released' status
-    void setIsTriggeredReleasedStatusText(String value) {
+    public void setIsTriggeredReleasedStatusText(String value) {
         this.deviceIsTriggeredReleasedText.setText(value);
     }
 
-    void setIsTriggeredReleasedStatusTextColor(int value) {
+    public void setIsTriggeredReleasedStatusTextColor(int value) {
         this.deviceIsTriggeredReleasedText.setTextColor(ContextCompat.getColor(context, value));
     }
 
-    TextView getIsTriggeredReleasedStatusText() {
+    public TextView getIsTriggeredReleasedStatusText() {
         return deviceIsTriggeredReleasedText;
     }
 
 
 
     // Function sets current magnet status text, 'opened' or 'closed'
-    void setIsOpenedLockedStateText(String value) {
+    public void setIsOpenedLockedStateText(String value) {
         this.deviceIsOpenedClosedText.setText(value);
     }
 
-    void setIsOpenedLockedStateTextColor(int value) {
+    public void setIsOpenedLockedStateTextColor(int value) {
         this.deviceIsOpenedClosedText.setTextColor(ContextCompat.getColor(context, value));
     }
 
 
 
 
-    void setDeviceStatus(String value) {
+    public void setDeviceStatus(String value) {
         this.deviceStatus.setText(value);
         if(value.equals("online"))
             _isDeviceOnline = true;
@@ -129,9 +131,9 @@ class DynamicLayoutMagnet {
             _isDeviceOnline = false;
     }
 
-    boolean isDeviceOnline() { return this._isDeviceOnline; }
+    public boolean isDeviceOnline() { return this._isDeviceOnline; }
 
-    void setStatusTextColor(int value) {
+    public void setStatusTextColor(int value) {
         this.deviceStatus.setTextColor(ContextCompat.getColor(context, value));
     }
 

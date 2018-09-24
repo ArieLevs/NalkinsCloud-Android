@@ -1,4 +1,4 @@
-package cloud.nalkins.nalkinscloud;
+package cloud.nalkins.nalkinscloud.deviceLayouts;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -12,11 +12,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import cloud.nalkins.nalkinscloud.R;
+
 /**
  * Created by Arie on 4/25/2017.
  *
  */
-class DynamicLayoutTemperature extends AppCompatActivity {
+public class DynamicLayoutTemperature extends AppCompatActivity {
 
     private Context context;
 
@@ -40,7 +42,7 @@ class DynamicLayoutTemperature extends AppCompatActivity {
     private View v;
 
     // DynamicLayoutTemperature constructor
-    DynamicLayoutTemperature(Context context, String deviceId, String deviceType, String deviceName) {
+    public DynamicLayoutTemperature(Context context, String deviceId, String deviceType, String deviceName) {
 
         this.context = context; // Layout context
 
@@ -73,28 +75,28 @@ class DynamicLayoutTemperature extends AppCompatActivity {
         //this.btn =(Button)v.findViewById(R.id.button1);
     }
 
-    boolean isDeviceOnline() {
+    public boolean isDeviceOnline() {
         return this._isDeviceOnline;
     }
 
-    ImageView getOptionsIcon() {
+    public ImageView getOptionsIcon() {
         return deviceOptionsIcon;
     }
 
-    ImageView getRemoveIcon() {
+    public ImageView getRemoveIcon() {
         return deviceRemoveIcon;
     }
 
-    ImageView getDeviceIcon() {
+    public ImageView getDeviceIcon() {
         return deviceIcon;
     }
 
-    LinearLayout getDeviceOptionsLayout() {
+    public LinearLayout getDeviceOptionsLayout() {
         return this.deviceOptionsLayout;
     }
 
     // Set online / offline status
-    void setStatusValue(String value) {
+    public void setStatusValue(String value) {
         this.deviceStatus.setText(value);
         if(value.equals("online"))
             _isDeviceOnline = true;
@@ -102,7 +104,7 @@ class DynamicLayoutTemperature extends AppCompatActivity {
             _isDeviceOnline = false;
     }
 
-    void setStatusTextColor(int value) {
+    public void setStatusTextColor(int value) {
         this.deviceStatus.setTextColor(ContextCompat.getColor(context, value));
     }
 
@@ -111,14 +113,14 @@ class DynamicLayoutTemperature extends AppCompatActivity {
         return v;
     }
 
-    void setDeviceTemperatureText(String value) {
+    public void setDeviceTemperatureText(String value) {
         this.device_temp_var.setText(value);
     }
     public TextView getDeviceTempratureText() {
         return device_temp_var;
     }
 
-    void setDeviceHumidityText(String value) {
+    public void setDeviceHumidityText(String value) {
         this.device_humidity_var.setText(value);
     }
     public TextView getDeviceHumidityText() {

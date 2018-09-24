@@ -1,5 +1,5 @@
 
-package cloud.nalkins.nalkinscloud;
+package cloud.nalkins.nalkinscloud.deviceLayouts;
 
 import android.os.Bundle;
 import android.os.Message;
@@ -14,6 +14,11 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import java.util.StringTokenizer;
+
+import cloud.nalkins.nalkinscloud.MainActivity;
+import cloud.nalkins.nalkinscloud.MqttClient;
+import cloud.nalkins.nalkinscloud.R;
+import cloud.nalkins.nalkinscloud.SharedPreferences;
 
 
 /**

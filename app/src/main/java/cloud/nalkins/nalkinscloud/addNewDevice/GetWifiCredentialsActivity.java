@@ -1,4 +1,4 @@
-package cloud.nalkins.nalkinscloud;
+package cloud.nalkins.nalkinscloud.addNewDevice;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import cloud.nalkins.nalkinscloud.Functions;
+import cloud.nalkins.nalkinscloud.HandleWifiConnection;
+import cloud.nalkins.nalkinscloud.R;
 
 /**
  * Created by Arie on 3/25/2017.

@@ -1,4 +1,4 @@
-package cloud.nalkins.nalkinscloud;
+package cloud.nalkins.nalkinscloud.deviceLayouts;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -9,11 +9,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import cloud.nalkins.nalkinscloud.R;
+
 /**
  * Created by Arie on 4/25/2017.
  *
  */
-class DynamicLayoutDistillery {
+public class DynamicLayoutDistillery {
 
     private Context context;
 
@@ -32,36 +34,36 @@ class DynamicLayoutDistillery {
     private ImageView deviceRemoveIcon;
 
     //Automation scheduler part
-    ImageView startScheduler;
-    ImageView statusScheduler;
-    ImageView startTemperatureConf;
-    ImageView statusTemperatureConf ;
-    ImageView startManualConf;
+    public ImageView startScheduler;
+    public ImageView statusScheduler;
+    public ImageView startTemperatureConf;
+    public ImageView statusTemperatureConf ;
+    public ImageView startManualConf;
 
     private LinearLayout manualConfHidden;
 
     private ToggleButton toggle;
 
-    ImageView tempIcon;
+    public ImageView tempIcon;
     private TextView temp_status_text_view;
     private TextView temperature;
 
-    ImageView switchIcon1;
+    public ImageView switchIcon1;
     private TextView device_status_text_view_1;
     private TextView device_switch_status_var_1;
     private TextView device_consumption_var_1;
 
-    ImageView switchIcon2;
+    public ImageView switchIcon2;
     private TextView device_status_text_view_2;
     private TextView device_switch_status_var_2;
     private TextView device_consumption_var_2;
 
-    ImageView switchIcon3;
+    public ImageView switchIcon3;
     private TextView device_status_text_view_3;
     private TextView device_switch_status_var_3;
     private TextView device_consumption_var_3;
 
-    ImageView switchIcon4;
+    public ImageView switchIcon4;
     private TextView device_status_text_view_4;
     private TextView device_switch_status_var_4;
     private TextView device_consumption_var_4;
@@ -69,7 +71,7 @@ class DynamicLayoutDistillery {
     private View v;
 
     // DynamicLayoutDistillery constructor
-    DynamicLayoutDistillery(Context context, String deviceId, String deviceType, String deviceName) {
+    public DynamicLayoutDistillery(Context context, String deviceId, String deviceType, String deviceName) {
 
         this.context = context; // Layout context
 
@@ -139,7 +141,7 @@ class DynamicLayoutDistillery {
 
     }
 
-    void setStatusValue(String value) {
+    public void setStatusValue(String value) {
         this.deviceStatus.setText(value);
         if(value.equals("online"))
             _isDeviceOnline = true;
@@ -147,42 +149,42 @@ class DynamicLayoutDistillery {
             _isDeviceOnline = false;
     }
 
-    ImageView getOptionsIcon() {
+    public ImageView getOptionsIcon() {
         return deviceOptionsIcon;
     }
 
-    ImageView getRemoveIcon() {
+    public ImageView getRemoveIcon() {
         return deviceRemoveIcon;
     }
 
-    LinearLayout getDeviceOptionsLayout() {
+    public LinearLayout getDeviceOptionsLayout() {
         return this.deviceOptionsLayout;
     }
 
-    boolean isDeviceOnline() {
+    public boolean isDeviceOnline() {
         return this._isDeviceOnline;
     }
 
-    void setStatusTextColor(int value) {
+    public void setStatusTextColor(int value) {
         this.deviceStatus.setTextColor(ContextCompat.getColor(context, value));
     }
 
 
     // Function sets icon for the layout
-    void setManualConfStartIcon(int iconId) {
+    public void setManualConfStartIcon(int iconId) {
         this.startManualConf.setImageResource(iconId);
     }
 
     // Function sets icon for the layout
-    void setTemperatureConfStatusIcon(int iconId) {
+    public void setTemperatureConfStatusIcon(int iconId) {
         this.statusTemperatureConf.setImageResource(iconId);
     }
 
-    void setTemperatureIcon(int iconId) {
+    public void setTemperatureIcon(int iconId) {
         this.tempIcon.setImageResource(iconId);
     }
 
-    LinearLayout getHiddenManualConfLayout() {
+    public LinearLayout getHiddenManualConfLayout() {
         return this.manualConfHidden;
     }
 
@@ -191,11 +193,11 @@ class DynamicLayoutDistillery {
         return v;
     }
 
-    void setDistilleryToggleButton(boolean checked) {
+    public void setDistilleryToggleButton(boolean checked) {
         this.toggle.setChecked(checked);
     }
 
-    ToggleButton getDistilleryToggleButton() {
+    public ToggleButton getDistilleryToggleButton() {
         return this.toggle;
     }
 
@@ -213,7 +215,7 @@ class DynamicLayoutDistillery {
     public void setDeviceTemperatureStatusText(String value) {
         this.temp_status_text_view.setText(value);
     }
-    void setDeviceTemperatureText(String value) {
+    public void setDeviceTemperatureText(String value) {
         this.temperature.setText(value);
     }
 

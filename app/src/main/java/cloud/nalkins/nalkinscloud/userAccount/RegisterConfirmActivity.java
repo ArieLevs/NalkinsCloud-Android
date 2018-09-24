@@ -1,4 +1,4 @@
-package cloud.nalkins.nalkinscloud;
+package cloud.nalkins.nalkinscloud.userAccount;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,12 +8,15 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 
+import cloud.nalkins.nalkinscloud.R;
+import cloud.nalkins.nalkinscloud.login.LogoActivity;
+
 /**
- * Created by Arie on 1/16/2018.
+ * Created by Arie on 12/31/2017.
  *
  */
 
-public class ForgotPasswordCompleteActivity extends AppCompatActivity {
+public class RegisterConfirmActivity extends AppCompatActivity {
 
     // Create the ActionBar
     @Override
@@ -26,10 +29,10 @@ public class ForgotPasswordCompleteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forgot_password_complete);
+        setContentView(R.layout.activity_register_success);
 
         //Set confirm button
-        Button registerConfirmButton = (Button) findViewById(R.id.btnConfirmForgotPassComplete);
+        Button registerConfirmButton = (Button) findViewById(R.id.btnConfirmRegistration);
 
         registerConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override

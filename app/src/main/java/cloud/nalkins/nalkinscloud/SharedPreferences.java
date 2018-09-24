@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
  *
  * Class maintains session data across the app using the SharedPreferences
  */
-class SharedPreferences {
+public class SharedPreferences {
     // LogCat tag
     private static String TAG = SharedPreferences.class.getSimpleName();
 
@@ -31,7 +31,7 @@ class SharedPreferences {
     private static final String KEY_USERNAME = "Username";
     private static final String KEY_MAIN_ACTIVITY = "MainActivity";
 
-    SharedPreferences(Context context) {
+    public SharedPreferences(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         _editor = pref.edit();
@@ -77,7 +77,7 @@ class SharedPreferences {
      * @return String users current refresh token
      * In case KEY_REFRESH_TOKEN = null, the String "NULL" will return
      */
-    String getRefreshToken(){
+    public String getRefreshToken(){
         String key_refresh_token = pref.getString(KEY_REFRESH_TOKEN, "NULL");
         Log.d(TAG, "Refresh Token returned " + key_refresh_token + " from shared preferences.");
         return key_refresh_token;
@@ -86,7 +86,7 @@ class SharedPreferences {
     /**
      * Remove current token from shared preferences
      */
-    void removeToken(){
+    public void removeToken(){
         Log.d(TAG, "Running 'removeToken'");
         _editor.remove(KEY_ACCESS_TOKEN);
         _editor.commit();
@@ -130,7 +130,7 @@ class SharedPreferences {
     /**
      * Remove current username from shared preferences
      */
-    void removeUsername(){
+    public void removeUsername(){
         Log.d(TAG, "Running 'removeUsername'");
         _editor.remove(KEY_USERNAME);
         _editor.commit();
@@ -176,7 +176,7 @@ class SharedPreferences {
         return automation;
     }
 
-    void setIsCustomTempConfigured(Boolean value) {
+    public void setIsCustomTempConfigured(Boolean value) {
         _editor.putBoolean(CUSTOM_TEMP_CONFIGURED, value);
         _editor.commit();
         Log.d(TAG, "setIsCustomTempConfigured stored: " + value + ", in shared preferences.");
@@ -188,7 +188,7 @@ class SharedPreferences {
         return customTemp;
     }
 
-    void setCustomTempValues(int[] values) {
+    public void setCustomTempValues(int[] values) {
         StringBuilder str = new StringBuilder();
         for( int value : values) {
                 str.append(value).append(",");
@@ -198,7 +198,7 @@ class SharedPreferences {
         Log.d(TAG, "setIsCustomTempConfigured stored: " + str + ", in shared preferences.");
     }
 
-    String getCustomTempValues() {
+    public String getCustomTempValues() {
         String custom_temp_values = pref.getString(CUSTOM_TEMP_VALUES, "94, 60, 80, 80");
         Log.d(TAG, "getCustomTempValues returned: " + custom_temp_values + ", from shared preferences.");
         return custom_temp_values;

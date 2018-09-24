@@ -1,4 +1,4 @@
-package cloud.nalkins.nalkinscloud;
+package cloud.nalkins.nalkinscloud.deviceLayouts;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -9,12 +9,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import cloud.nalkins.nalkinscloud.R;
+
 /**
  * Created by Arie on 4/25/2017.
  *
  */
 
-class DynamicLayoutSwitch {
+public class DynamicLayoutSwitch {
 
     private Context context;
 
@@ -36,7 +38,7 @@ class DynamicLayoutSwitch {
     private View v;
 
     // DynamicLayoutTemperature constructor
-    DynamicLayoutSwitch(Context context, String deviceId, String deviceType, String deviceName) {
+    public DynamicLayoutSwitch(Context context, String deviceId, String deviceType, String deviceName) {
 
         this.context = context; // Layout context
 
@@ -68,19 +70,19 @@ class DynamicLayoutSwitch {
     }
 
 
-    boolean getIsDeviceOnline() {
+    public boolean getIsDeviceOnline() {
         return this._isDeviceOnline;
     }
 
-    LinearLayout getDeviceOptionsLayout() {
+    public LinearLayout getDeviceOptionsLayout() {
         return this.deviceOptionsLayout;
     }
 
-    ImageView getOptionsIcon() {
+    public ImageView getOptionsIcon() {
         return deviceOptionsIcon;
     }
 
-    ImageView getRemoveIcon() {
+    public ImageView getRemoveIcon() {
         return deviceRemoveIcon;
     }
 
@@ -90,24 +92,24 @@ class DynamicLayoutSwitch {
     }
 
     // Set online / offline status
-    void setStatusValue(String value) {
+    public void setStatusValue(String value) {
         this.deviceStatus.setText(value);
     }
 
-    void setIsDeviceOnline(boolean value) {
+    public void setIsDeviceOnline(boolean value) {
         _isDeviceOnline = value;
     }
 
     // Set online / offline text color
-    void setStatusTextColor(int value) {
+    public void setStatusTextColor(int value) {
         this.deviceStatus.setTextColor(ContextCompat.getColor(context, value));
     }
 
-    void setSwitchToggleButton(boolean checked) {
+    public void setSwitchToggleButton(boolean checked) {
         this.toggle.setChecked(checked);
     }
 
-    ToggleButton getSwitchToggleButton() {
+    public ToggleButton getSwitchToggleButton() {
         return this.toggle;
     }
 

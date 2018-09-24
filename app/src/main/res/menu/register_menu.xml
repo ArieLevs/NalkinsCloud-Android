@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="cloud.nalkins.nalkinscloud.RegisterActivity" >
+    tools:context="cloud.nalkins.nalkinscloud.userAccount.RegisterActivity" >
 
     <!-- Help -->
     <item android:id="@+id/action_help"

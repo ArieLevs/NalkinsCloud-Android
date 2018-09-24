@@ -23,16 +23,16 @@ import java.util.Map;
  *
  */
 
-class Functions {
+public class Functions {
 
     private static final String TAG = Functions.class.getSimpleName();
 
-    static void showDialog(ProgressDialog pDialog) {
+    public static void showDialog(ProgressDialog pDialog) {
         if (!pDialog.isShowing())
             pDialog.show();
     }
 
-    static void hideDialog(ProgressDialog pDialog) {
+    public static void hideDialog(ProgressDialog pDialog) {
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
@@ -41,27 +41,27 @@ class Functions {
         return (!username.isEmpty() && username.length() >= 6 && isAlphanumeric(username));
     }
 
-    static boolean validateEmail(String email) {
+    public static boolean validateEmail(String email) {
         return (!email.isEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
-    static boolean isValidPassword(String password) {
+    public static boolean isValidPassword(String password) {
         return (password.length() >= 8 && password.length() <= 16);
     }
 
     // Redirect user to NalkinsCloud Project readme page
-    static void helpFunction(Context context) {
+    public static void helpFunction(Context context) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConfig.NALKINS_CLOUD_ANDROID_README_URL));
         context.startActivity(browserIntent);
     }
 
     // Redirect user to NalkinsCloud Project license page
-    static void legalFunction(Context context) {
+    public static void legalFunction(Context context) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConfig.NALKINS_CLOUD_ANDROID_LICENSE_URL));
         context.startActivity(browserIntent);
     }
 
-    static boolean isAlphanumeric(String str) {
+    public static boolean isAlphanumeric(String str) {
         for (int i=0; i<str.length(); i++) {
             char c = str.charAt(i);
             if (!Character.isDigit(c) && !Character.isLetter(c) && c!=' ')
@@ -77,7 +77,7 @@ class Functions {
      * @param value input string to validate
      * @return True if input string contains alphabet characters only or False if not
      */
-    static boolean isAlphabet(String value) {
+    public static boolean isAlphabet(String value) {
         for (int i=0; i<value.length(); i++) {
             char c = value.charAt(i);
             if (!Character.isLetter(c))
@@ -93,7 +93,7 @@ class Functions {
      *
      * @param context context we are working on
      */
-    static void stopWifiConnectionProcedure(Context context) {
+    public static void stopWifiConnectionProcedure(Context context) {
         Log.d(TAG, "Running 'stopConnectionProcedure'");
 
         // After configuration done, disconnect
