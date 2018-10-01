@@ -116,6 +116,10 @@ public class MqttClient {
                 // Send message to UI at MainActivity
                 Message msg = MainActivity.uiHandler.obtainMessage();
                 msg.what = UPDATE_DEVICE_UI;
+
+                msg.obj = "{\"topic\":\"" + topic + "\"," +
+                           "\"message\": \"" + payload + "\"}";
+
                 msg.obj = topic + "-" + payload;
                 MainActivity.uiHandler.sendMessage(msg);
 

@@ -118,24 +118,23 @@ public class RegisterActivity extends AppCompatActivity {
                              last_nameWrapper.setErrorEnabled(false);
                              if (last_name.length() >= 2 && last_name.length() <= 32) { // Check if last name is valid
                                  last_nameWrapper.setErrorEnabled(false);
-                                     if ((Functions.validateEmail(email))) { // Check if email valid
-                                         emailWrapper.setErrorEnabled(false);
-                                         if ((Functions.isValidPassword(password))) { // Check if password valid
-                                             passwordWrapper.setErrorEnabled(false);
-                                             if (Functions.isValidPassword(validate_password)) { // Check if second password valid
-                                                 validate_passwordWrapper.setErrorEnabled(false);
-                                                 if (password.equals(validate_password)) { // Check if both passwords math
-                                                     Log.d(TAG, "Validation form passed");
-                                                     doRegistration(first_name, last_name, email, password); // Start registration process
-                                                 } else
-                                                     Toast.makeText(getApplicationContext(), "Password does not match", Toast.LENGTH_SHORT).show();
+                                 if ((Functions.validateEmail(email))) { // Check if email valid
+                                     emailWrapper.setErrorEnabled(false);
+                                     if ((Functions.isValidPassword(password))) { // Check if password valid
+                                         passwordWrapper.setErrorEnabled(false);
+                                         if (Functions.isValidPassword(validate_password)) { // Check if second password valid
+                                             validate_passwordWrapper.setErrorEnabled(false);
+                                             if (password.equals(validate_password)) { // Check if both passwords math
+                                                 Log.d(TAG, "Validation form passed");
+                                                 doRegistration(first_name, last_name, email, password); // Start registration process
                                              } else
-                                                 validate_passwordWrapper.setError("Not a valid password!");
+                                                 Toast.makeText(getApplicationContext(), "Password does not match", Toast.LENGTH_SHORT).show();
                                          } else
-                                             passwordWrapper.setError("Not a valid password!");
+                                             validate_passwordWrapper.setError("Not a valid password!");
                                      } else
-                                         emailWrapper.setError("Invalid email");
-
+                                         passwordWrapper.setError("Not a valid password!");
+                                 } else
+                                     emailWrapper.setError("Invalid email");
                              } else
                                  last_nameWrapper.setError("Last name must be 2 - 32 characters long");
                          } else
@@ -206,14 +205,12 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
                 if(error instanceof TimeoutError || error instanceof NoConnectionError) {
                     Log.e(TAG, "Server Time out error or no connection");
                     Toast.makeText(getApplicationContext(),
                             "Timeout error! Server is not responding",
                             Toast.LENGTH_LONG).show();
                 } else {
-
                     String body;
                     //get status code here
                     try {
@@ -233,7 +230,6 @@ public class RegisterActivity extends AppCompatActivity {
                     } catch (NullPointerException e) {
                         Log.e(TAG, "Login Error: " + e.toString());
                     }
-
                 }
                 Functions.hideDialog(pDialog);
             }

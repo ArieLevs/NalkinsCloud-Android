@@ -694,7 +694,8 @@ public class DateTimePickerActivity extends AppCompatActivity {
                       "end_date_time_selected": false,
                       "end_date_time_values": "2017-05-21 17:31:00+0300"
                    }
-                }*/
+                }
+            */
         }
         catch (JSONException e) {
             Log.e(TAG, "JSONException error: " + e);

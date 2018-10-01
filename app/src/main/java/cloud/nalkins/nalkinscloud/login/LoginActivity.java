@@ -19,7 +19,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
@@ -270,7 +269,7 @@ public class LoginActivity extends AppCompatActivity {
         }) {
             // Set the OAUTH2 header to hold the client ID + client secret
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
                 String auth = "Basic "
                         + Base64.encodeToString((AppConfig.OAUTH_CLIENT_ID

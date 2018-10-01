@@ -86,8 +86,6 @@ public class LogoActivity extends AppCompatActivity {
             }
         };
 
-
-
         if (sharedPreferences.getToken().equals("NULL"))
             lunchLoginActivity();
         else
@@ -116,8 +114,6 @@ public class LogoActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(JSONObject response) {
-
-
                 Log.d(TAG, "Health check Response: " + response.toString());
                 try {
                     String status = response.getString("status");
@@ -209,7 +205,6 @@ public class LogoActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(String response) {
-
                 Log.d(TAG, "Refresh Token Response: " + response);
                 try {
                     JSONObject jObj = new JSONObject(response);
@@ -241,8 +236,6 @@ public class LogoActivity extends AppCompatActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
-
                 if(error instanceof TimeoutError || error instanceof NoConnectionError) {
                     Log.e(TAG, "Server Time out error or no connection");
                     Toast.makeText(getApplicationContext(),

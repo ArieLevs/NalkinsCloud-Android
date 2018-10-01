@@ -38,9 +38,6 @@ public class DynamicLayoutDistillery {
     public ImageView statusScheduler;
     public ImageView startTemperatureConf;
     public ImageView statusTemperatureConf ;
-    public ImageView startManualConf;
-
-    private LinearLayout manualConfHidden;
 
     private ToggleButton toggle;
 
@@ -49,24 +46,16 @@ public class DynamicLayoutDistillery {
     private TextView temperature;
 
     public ImageView switchIcon1;
-    private TextView device_status_text_view_1;
     private TextView device_switch_status_var_1;
-    private TextView device_consumption_var_1;
 
     public ImageView switchIcon2;
-    private TextView device_status_text_view_2;
     private TextView device_switch_status_var_2;
-    private TextView device_consumption_var_2;
 
     public ImageView switchIcon3;
-    private TextView device_status_text_view_3;
     private TextView device_switch_status_var_3;
-    private TextView device_consumption_var_3;
 
     public ImageView switchIcon4;
-    private TextView device_status_text_view_4;
     private TextView device_switch_status_var_4;
-    private TextView device_consumption_var_4;
 
     private View v;
 
@@ -101,12 +90,6 @@ public class DynamicLayoutDistillery {
         // Initialize start StatusTemperatureConf button
         this.statusTemperatureConf = (ImageView) v.findViewById(R.id.temp_set_icon);
 
-
-        // Initialize start manual_configuration_start_icon button
-        this.startManualConf = (ImageView) v.findViewById(R.id.manual_configuration_start_icon);
-        // Initialize the hidden manualConfHidden part
-        this.manualConfHidden = (LinearLayout) v.findViewById(R.id.manual_configuration_hidden);
-
         this.deviceOptionsIcon = (ImageView) v.findViewById(R.id.device_options); // Define and set the layouts side icon
 
         this.deviceRemoveIcon = (ImageView) v.findViewById(R.id.device_remove_icon); // Define and set the layouts side icon
@@ -120,25 +103,16 @@ public class DynamicLayoutDistillery {
         this.temperature =(TextView)v.findViewById(R.id.device_temp_var);
 
         this.switchIcon1 = (ImageView) v.findViewById(R.id.device_icon_1);
-        this.device_status_text_view_1 =(TextView)v.findViewById(R.id.device_status_text_view_1);
         this.device_switch_status_var_1 =(TextView)v.findViewById(R.id.device_switch_status_var_1);
-        this.device_consumption_var_1 =(TextView)v.findViewById(R.id.device_consumption_var_1);
 
         this.switchIcon2 = (ImageView) v.findViewById(R.id.device_icon_2);
-        this.device_status_text_view_2 =(TextView)v.findViewById(R.id.device_status_text_view_2);
         this.device_switch_status_var_2 =(TextView)v.findViewById(R.id.device_switch_status_var_2);
-        this.device_consumption_var_2 =(TextView)v.findViewById(R.id.device_consumption_var_2);
 
         this.switchIcon3 = (ImageView) v.findViewById(R.id.device_icon_3);
-        this.device_status_text_view_3 =(TextView)v.findViewById(R.id.device_status_text_view_3);
         this.device_switch_status_var_3 =(TextView)v.findViewById(R.id.device_switch_status_var_3);
-        this.device_consumption_var_3 =(TextView)v.findViewById(R.id.device_consumption_var_3);
 
         this.switchIcon4 = (ImageView) v.findViewById(R.id.device_icon_4);
-        this.device_status_text_view_4 =(TextView)v.findViewById(R.id.device_status_text_view_4);
         this.device_switch_status_var_4 =(TextView)v.findViewById(R.id.device_switch_status_var_4);
-        this.device_consumption_var_4 =(TextView)v.findViewById(R.id.device_consumption_var_4);
-
     }
 
     public void setStatusValue(String value) {
@@ -169,12 +143,6 @@ public class DynamicLayoutDistillery {
         this.deviceStatus.setTextColor(ContextCompat.getColor(context, value));
     }
 
-
-    // Function sets icon for the layout
-    public void setManualConfStartIcon(int iconId) {
-        this.startManualConf.setImageResource(iconId);
-    }
-
     // Function sets icon for the layout
     public void setTemperatureConfStatusIcon(int iconId) {
         this.statusTemperatureConf.setImageResource(iconId);
@@ -182,10 +150,6 @@ public class DynamicLayoutDistillery {
 
     public void setTemperatureIcon(int iconId) {
         this.tempIcon.setImageResource(iconId);
-    }
-
-    public LinearLayout getHiddenManualConfLayout() {
-        return this.manualConfHidden;
     }
 
     // Function return the View object of relevant layout
@@ -215,52 +179,43 @@ public class DynamicLayoutDistillery {
     public void setDeviceTemperatureStatusText(String value) {
         this.temp_status_text_view.setText(value);
     }
+
     public void setDeviceTemperatureText(String value) {
         this.temperature.setText(value);
     }
 
 
-    public void setDeviceSwitchStatus1(String value) {
-        this.device_status_text_view_1.setText(value);
-    }
-    public void setDeviceSwitchState1(String value) {
+    public void setDeviceSsrNo1Uptime(String value) {
         this.device_switch_status_var_1.setText(value);
     }
-    public void setDeviceSwitchConsumption1(String value) {
-        this.device_consumption_var_1.setText(value);
+    public void setDeviceSsrStatusNo1(int iconId) {
+        this.switchIcon1.setImageResource(iconId);
     }
 
 
 
-    public void setDeviceSwitchStatus2(String value) {
-        this.device_status_text_view_2.setText(value);
-    }
-    public void setDeviceSwitchState2(String value) {
+    public void setDeviceSsrNo2Uptime(String value) {
         this.device_switch_status_var_2.setText(value);
     }
-    public void setDeviceSwitchConsumption2(String value) {
-        this.device_consumption_var_2.setText(value);
+    public void setDeviceSsrStatusNo2(int iconId) {
+        this.switchIcon2.setImageResource(iconId);
     }
 
 
-    public void setDeviceSwitchStatus3(String value) {
-        this.device_status_text_view_3.setText(value);
-    }
-    public void setDeviceSwitchState3(String value) {
+
+    public void setDeviceSsrNo3Uptime(String value) {
         this.device_switch_status_var_3.setText(value);
     }
-    public void setDeviceSwitchConsumption3(String value) {
-        this.device_consumption_var_3.setText(value);
+    public void setDeviceSsrStatusNo3(int iconId) {
+        this.switchIcon3.setImageResource(iconId);
     }
 
 
-    public void setDeviceSwitchStatus4(String value) {
-        this.device_status_text_view_4.setText(value);
-    }
-    public void setDeviceSwitchState4(String value) {
+
+    public void setDeviceSsrNo4Uptime(String value) {
         this.device_switch_status_var_4.setText(value);
     }
-    public void setDeviceSwitchConsumption4(String value) {
-        this.device_consumption_var_4.setText(value);
+    public void setDeviceSsrStatusNo4(int iconId) {
+        this.switchIcon4.setImageResource(iconId);
     }
 }

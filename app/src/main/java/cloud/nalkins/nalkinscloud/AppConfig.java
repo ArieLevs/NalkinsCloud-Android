@@ -16,7 +16,7 @@ import java.util.Properties;
 public class AppConfig {
 
     //static String ENVIRONMENT= System.getenv("environment");
-    static String ENVIRONMENT= "alpha";
+    static String ENVIRONMENT= "dev"; // production, alpha, dev
 
     //Web Server IP / Domain name
     public final static String APP_NAME = "NalkinsCloud";

@@ -180,10 +180,22 @@ public class MainActivity extends AppCompatActivity {
             public void handleMessage(Message inputMessage) {
                 switch (inputMessage.what) {
                     case UPDATE_DEVICE_UI:
-                        String CurrentString = inputMessage.obj.toString();
-                        String[] separated = CurrentString.split("-");
+                        String currentString = inputMessage.obj.toString();
 
-                        handleIncomingMessages(separated[0], separated[1]);
+                        String topic = "";
+                        String message ="";
+                        try {
+                            JSONObject incomingMessageJson = new JSONObject(currentString);
+                            topic = incomingMessageJson.getString("topic");
+                            message = incomingMessageJson.getString("message");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //String[] separated = currentString.split("-");
+
+                        //handleIncomingMessages(separated[0], separated[1]);
+                        handleIncomingMessages(topic, message);
                         break;
                     case SHOW_UPDATE_SERVER_DIALOG:
                         pDialog.setMessage("Updating Server ...");
@@ -432,8 +444,6 @@ public class MainActivity extends AppCompatActivity {
 
             // If current device from 'deviceList' is the device that the topic contains then
             if(currentDeviceID.equals(topicDeviceId)) {
-                Log.d(TAG, "Working on device_id: " + currentDeviceID);
-
                 // Trace relevant layout object by its deviceId
                 for (HashMap.Entry<String, Object> entry : inflatedLayoutsIds.entrySet()) {
                     // If the current device id equals the id of the current object (layout) then
@@ -598,6 +608,35 @@ public class MainActivity extends AppCompatActivity {
                                         if(message.equals("0"))
                                             // Update the icon to "X" to indicate
                                             temp.setTemperatureConfStatusIcon(R.drawable.x_24);
+                                    }
+                                    break;
+
+                                    case "ssr_1_status": {
+                                        if(message.equals("1"))
+                                            temp.setDeviceSsrStatusNo1(R.drawable.button_power_green_64);
+                                        if(message.equals("0"))
+                                            temp.setDeviceSsrStatusNo1(R.drawable.button_power_red_64);
+                                    }
+                                    break;
+                                    case "ssr_2_status": {
+                                        if(message.equals("1"))
+                                            temp.setDeviceSsrStatusNo2(R.drawable.button_power_green_64);
+                                        if(message.equals("0"))
+                                            temp.setDeviceSsrStatusNo2(R.drawable.button_power_red_64);
+                                    }
+                                    break;
+                                    case "ssr_3_status": {
+                                        if(message.equals("1"))
+                                            temp.setDeviceSsrStatusNo3(R.drawable.button_power_green_64);
+                                        if(message.equals("0"))
+                                            temp.setDeviceSsrStatusNo3(R.drawable.button_power_red_64);
+                                    }
+                                    break;
+                                    case "ssr_4_status": {
+                                        if(message.equals("1"))
+                                            temp.setDeviceSsrStatusNo4(R.drawable.button_power_green_64);
+                                        if(message.equals("0"))
+                                            temp.setDeviceSsrStatusNo4(R.drawable.button_power_red_64);
                                     }
                                     break;
                                 }
@@ -1057,29 +1096,6 @@ public class MainActivity extends AppCompatActivity {
         tempLayout.getRemoveIcon().setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 removeDeviceAlert(deviceMap.get("device_id"));
-            }
-        });
-
-        // Set the 'manual_configuration_start_icon' function
-        tempLayout.startManualConf.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (tempLayout.isDeviceOnline()) {
-                    if (isManualConfShowing) { // If the manual conf layout made visible
-
-                        isManualConfShowing = false; // Change flag statue to remember previous state
-                        tempLayout.getHiddenManualConfLayout().setVisibility(View.GONE);// Show the layout
-                        tempLayout.setManualConfStartIcon(R.drawable.arrow_right_24); // Set X as status icon (not running)
-                    } else { // If the manual conf layout made invisible
-                        isManualConfShowing = true; // Change flag statue to remember previous state
-                        tempLayout.getHiddenManualConfLayout().setVisibility(View.VISIBLE);// Show the layout
-                        tempLayout.setManualConfStartIcon(R.drawable.arrow_left_24); // Set V as status icon (running)
-                    }
-                } else
-                    Toast.makeText(getApplicationContext(),
-                            "Device cannot be used while in 'offline' state",
-                            Toast.LENGTH_SHORT).show();
-
             }
         });
 
