@@ -130,4 +130,11 @@
     <string name="remove_device_text">Remove Device</string>
     <string name="device_options_button">Device Options</string>
 
+
+    <!-- Distillery Device -->
+    <string name="components_status">Components Status:</string>
+    <string name="uptime">Uptime:</string>
+    <string name="main_heater_name">Main Heater</string>
+
+
 </resources>

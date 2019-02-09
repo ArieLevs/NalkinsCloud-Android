@@ -16,18 +16,23 @@ import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 import static cloud.nalkins.nalkinscloud.AppConfig.ENVIRONMENT;
+import static cloud.nalkins.nalkinscloud.AppConfig.TRUST_ALL_CERTIFICATES;
 
 /**
  * Created by Arie on 3/8/2017.
@@ -56,7 +61,10 @@ public class NetworkRequests extends Application {
                 HttpsURLConnection httpsURLConnection = (HttpsURLConnection) super.createConnection(url);
                 try {
                     // Set up the trusted certificate
-                    httpsURLConnection.setSSLSocketFactory(getSSLSocketFactory());
+                    if (TRUST_ALL_CERTIFICATES)
+                        httpsURLConnection.setSSLSocketFactory(trustAllCertificated());
+                    else
+                        httpsURLConnection.setSSLSocketFactory(getSSLSocketFactory());
                     // Set up the host name that matched that certificate
                     httpsURLConnection.setHostnameVerifier(getHostnameVerifier());
                 } catch (Exception e) {
@@ -205,35 +213,29 @@ public class NetworkRequests extends Application {
         };
     } */
 
-    /*
+
     // This function should be used, in order to trust (###WARNING DANGEROUS###) ALL certificated
-    public void trustAllCertificated() {
-        try {
-            TrustManager[] trustAllCerts = new TrustManager[] {
-                    new X509TrustManager() {
-                        public X509Certificate[] getAcceptedIssuers() {
-                            X509Certificate[] myTrustedAnchors = new X509Certificate[0];
-                            return myTrustedAnchors;
-                        }
+    public SSLSocketFactory trustAllCertificated()
+        throws NoSuchAlgorithmException, KeyManagementException {
 
-                        @Override
-                        public void checkClientTrusted(X509Certificate[] certs, String authType) {}
-
-                        @Override
-                        public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+        TrustManager[] trustAllCerts = new TrustManager[] {
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() {
+                        X509Certificate[] myTrustedAnchors = new X509Certificate[0];
+                        return myTrustedAnchors;
                     }
-            };
 
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String arg0, SSLSession arg1) {
-                    return true;
+                    @Override
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+
+                    @Override
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {}
                 }
-            });
-        } catch (Exception e) {
-        }
-    }*/
+        };
+
+        SSLContext sc = SSLContext.getInstance("SSL");
+        sc.init(null, trustAllCerts, new SecureRandom());
+        return sc.getSocketFactory();
+    }
+
 }
