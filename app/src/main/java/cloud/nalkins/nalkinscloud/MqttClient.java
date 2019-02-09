@@ -120,7 +120,6 @@ public class MqttClient {
                 msg.obj = "{\"topic\":\"" + topic + "\"," +
                            "\"message\": \"" + payload + "\"}";
 
-                msg.obj = topic + "-" + payload;
                 MainActivity.uiHandler.sendMessage(msg);
 
                 NotificationHandler.identifyNotificationRequest(context, topic, new String(message.getPayload()));

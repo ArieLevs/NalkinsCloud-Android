@@ -147,7 +147,7 @@ public class LogoActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
 
                 if(error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Log.e(TAG, "Server Time out error or no connection");
+                    Log.e(TAG, error.toString());
                     Toast.makeText(getApplicationContext(), "Server Time out error or no connection", Toast.LENGTH_LONG).show();
                     finish();
                     hideDialog.sendToTarget();

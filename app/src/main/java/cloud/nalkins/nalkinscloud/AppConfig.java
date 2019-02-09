@@ -24,6 +24,7 @@ public class AppConfig {
     private static String DOMAIN_NAME = ""; // DOMAIN_NAME set at readProperties function
 
     // SSL Certificate configs
+    static boolean TRUST_ALL_CERTIFICATES = false;
     static String SERVER_SSL_CRT_FILE = ""; // SERVER_SSL_CRT_FILE set at readProperties function
     static String SERVER_SSL_CRT_HOST_NAME = DOMAIN_NAME; // SERVER_SSL_CRT_HOST_NAME set at readProperties function
 
@@ -107,6 +108,8 @@ public class AppConfig {
 
         DOMAIN_NAME = getProperty("domain_name");
 
+        // WARNING below value will be true only for development!!!
+        TRUST_ALL_CERTIFICATES = Boolean.parseBoolean(getProperty("trust_all_certificates"));
         SERVER_SSL_CRT_FILE = getProperty("server_ssl_crt_file_name");
         SERVER_SSL_CRT_HOST_NAME = DOMAIN_NAME;
 

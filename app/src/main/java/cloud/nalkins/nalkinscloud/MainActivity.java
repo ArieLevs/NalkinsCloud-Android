@@ -300,15 +300,19 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.LENGTH_LONG).show();
                     } else {
                         String body;
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse.data != null) {
-                            try {
-                                body = new String(error.networkResponse.data, "UTF-8");
-                                Log.e(TAG, "Device list error: " + body);
-                                Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
+                        try {
+                            //get response body and parse with appropriate encoding
+                            if (error.networkResponse.data != null) {
+                                try {
+                                    body = new String(error.networkResponse.data, "UTF-8");
+                                    Log.e(TAG, "Device list error: " + body);
+                                    Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
                             }
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
                         }
                     }
                 } catch (NullPointerException e) {
