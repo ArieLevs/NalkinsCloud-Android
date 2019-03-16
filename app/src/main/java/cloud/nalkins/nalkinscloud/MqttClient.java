@@ -32,8 +32,6 @@ public class MqttClient {
 
     private MqttAndroidClient _mqttAndroidClient;
     private MqttConnectOptions _mqttConnectOptions;
-    private SharedPreferences _sharedPreferences;
-    //private Context _context;
 
     // Object to store persistent data to external storage memory
     private MqttDefaultFilePersistence _dataStore; // Defaults to FileStore
@@ -54,9 +52,6 @@ public class MqttClient {
      */
     public MqttClient(final Context context, final String clientId, String password) {
         Log.d(TAG, "running 'MqttClient' constructor");
-        //this._context = context;
-        // Create new session manager object
-        _sharedPreferences = new SharedPreferences(context);
 
         // First try accessing external storage to store persistent data to disk
         try {
@@ -109,7 +104,7 @@ public class MqttClient {
 
             // Do when message arrived
             @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
+            public void messageArrived(String topic, MqttMessage message) {
                 String payload = new String(message.getPayload());
                 Log.d(TAG, "Message Arrived: " + topic + " Message: " + payload);
 
@@ -137,15 +132,17 @@ public class MqttClient {
         _mqttConnectOptions.setAutomaticReconnect(true);
         _mqttConnectOptions.setCleanSession(false);
 
-        // Try opening the .bks file from 'assets' folder
-        try {
-            InputStream input = context.getAssets().open(AppConfig.MQTT_SERVER_BKS_FILE);
-            // Set the .bks file to handle the SSL connection
-            _mqttConnectOptions.setSocketFactory(_mqttAndroidClient.getSSLSocketFactory(input, AppConfig.MQTT_SERVER_BKS_PASSWORD));
+        if (AppConfig.MQTT_ENCRYPTED) {
+            // Try opening the .bks file from 'assets' folder
+            try {
+                InputStream input = context.getAssets().open(AppConfig.MQTT_SERVER_BKS_FILE);
+                // Set the .bks file to handle the SSL connection
+                _mqttConnectOptions.setSocketFactory(_mqttAndroidClient.getSSLSocketFactory(input, AppConfig.MQTT_SERVER_BKS_PASSWORD));
 
-        } catch (MqttException | IOException e) {
-            e.printStackTrace();
-            Log.e(TAG, "Failed to open file: " + AppConfig.MQTT_SERVER_BKS_FILE);
+            } catch (MqttException | IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "Failed to open file: " + AppConfig.MQTT_SERVER_BKS_FILE);
+            }
         }
     }
 
@@ -166,8 +163,7 @@ public class MqttClient {
             // Connect to server, using _mqttConnectOptions connect options
             // All connections information should already be stored in clients object variables
             final IMqttToken connectionToken = this._mqttAndroidClient.connect(this._mqttConnectOptions);
-
-            //connectionToken.waitForCompletion(AppConfig.REQESTS_TIMEOUT);
+            //connectionToken.waitForCompletion(AppConfig.REQUESTS_TIMEOUT);
             connectionToken.setActionCallback(new IMqttActionListener() {
                 // Once connection was successful
                 @Override
@@ -187,7 +183,6 @@ public class MqttClient {
                     Log.e(TAG, "Connection to server failed, trying to reconnect.");
                     Log.e(TAG, asyncActionToken.toString());
                     Log.e(TAG, exception.toString());
-
                     //NotificationHandler.addNotification(context, "MQTT SERVICE", "NOT CONNECTED");
                 }
             });

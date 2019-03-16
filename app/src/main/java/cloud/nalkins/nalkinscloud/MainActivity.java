@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     static final int GET_DYNAMIC_LAYOUT_SPECIAL_TEMP_CONF_REQUEST = 2;
 
     // Hold the last state of the special automation status
-    private boolean isManualConfShowing = false;
+    //private boolean isManualConfShowing = false;
 
     // Each cell in the 'deviceList' holds (device_id, device_type, device_name)
     static ArrayList<HashMap<String, String>> devicesList = new ArrayList<>();

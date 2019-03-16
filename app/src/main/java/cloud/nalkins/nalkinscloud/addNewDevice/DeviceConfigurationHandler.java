@@ -351,8 +351,8 @@ public class DeviceConfigurationHandler extends AppCompatActivity {
         Map<String, String> params = new HashMap<>();
         params.put("ssid", local_ssid);
         params.put("wifi_pass", local_wifi_pass);
-        params.put("mqtt_server", AppConfig.DEVICE_MQTT_SERVER);
-        params.put("mqtt_port", AppConfig.DEVICE_MQTT_PORT);
+        params.put("mqtt_server", AppConfig.MQTT_SERVER_HOST);
+        params.put("mqtt_port", AppConfig.MQTT_SERVER_PORT);
         //params.put("server_fingerprint", AppConfig.URL_MQTT_FINGERPRINT);
         //params.put("device_user", session.getUsername());
         params.put("device_pass", device_pass);

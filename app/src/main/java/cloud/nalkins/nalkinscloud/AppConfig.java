@@ -18,32 +18,31 @@ public class AppConfig {
     //static String ENVIRONMENT= System.getenv("environment");
     static String ENVIRONMENT= "dev"; // production, alpha, dev
 
-    //Web Server IP / Domain name
     public final static String APP_NAME = "NalkinsCloud";
 
-    private static String DOMAIN_NAME = ""; // DOMAIN_NAME set at readProperties function
-
     // SSL Certificate configs
-    static boolean TRUST_ALL_CERTIFICATES = false;
+    static boolean TRUST_ALL_CERTIFICATES = false; // TRUST_ALL_CERTIFICATES set at readProperties function
     static String SERVER_SSL_CRT_FILE = ""; // SERVER_SSL_CRT_FILE set at readProperties function
-    static String SERVER_SSL_CRT_HOST_NAME = DOMAIN_NAME; // SERVER_SSL_CRT_HOST_NAME set at readProperties function
 
     // Web Server URIs
-    private static String SERVER_URI_PATH = ""; // SERVER_URI_PATH set at readProperties function
+    public static String API_SERVER_HOST = ""; // API_SERVER_HOST set at readProperties function
+    private static String API_SERVER_PORT = ""; // API_SERVER_PORT set at readProperties function
+    private static String API_SERVER_PROTOCOL = ""; // API_SERVER_PROTOCOL set at readProperties function
+    private static String API_SERVER_URI = ""; // API_SERVER_URI set at readProperties function
 
-    public static String URL_AUTHENTICATION = SERVER_URI_PATH + "/token/"; // Client Authentication
-    static String URL_REVOKE_TOKEN = SERVER_URI_PATH + "/revoke_token/"; // Revoke clients Token
-    public static String URL_REGISTER = SERVER_URI_PATH + "/register/";
-    public static String URL_FORGOT_PASSWORD = SERVER_URI_PATH + "/forgot_password/";
-    public static String URL_RESET_PASSWORD = SERVER_URI_PATH + "/reset_password/";
-    public static String URL_GET_DEVICE_PASS = SERVER_URI_PATH + "/get_device_pass/";
-    static String URL_REMOVE_DEVICE = SERVER_URI_PATH + "/remove_device/";
-    public static String URL_ACTIVATION = SERVER_URI_PATH + "/device_activation/";
-    static String URL_DEVICE_LIST = SERVER_URI_PATH + "/device_list/";
-    static String URL_UPDATE_DEVICE_PASS = SERVER_URI_PATH + "/update_device_pass/";
-    public static String URL_HEALTH_CHECK = SERVER_URI_PATH + "/health_check/";
-    static String URL_SET_SCHEDULED_JOB = SERVER_URI_PATH + "/set_scheduled_job/";
-    static String URL_GET_SCHEDULED_JOB = SERVER_URI_PATH + "/get_scheduled_job/";
+    public static String URL_AUTHENTICATION = API_SERVER_URI + "/token/"; // Client Authentication
+    static String URL_REVOKE_TOKEN = API_SERVER_URI + "/revoke_token/"; // Revoke clients Token
+    public static String URL_REGISTER = API_SERVER_URI + "/register/";
+    public static String URL_FORGOT_PASSWORD = API_SERVER_URI + "/forgot_password/";
+    public static String URL_RESET_PASSWORD = API_SERVER_URI + "/reset_password/";
+    public static String URL_GET_DEVICE_PASS = API_SERVER_URI + "/get_device_pass/";
+    static String URL_REMOVE_DEVICE = API_SERVER_URI + "/remove_device/";
+    public static String URL_ACTIVATION = API_SERVER_URI + "/device_activation/";
+    static String URL_DEVICE_LIST = API_SERVER_URI + "/device_list/";
+    static String URL_UPDATE_DEVICE_PASS = API_SERVER_URI + "/update_device_pass/";
+    public static String URL_HEALTH_CHECK = API_SERVER_URI + "/health_check/";
+    static String URL_SET_SCHEDULED_JOB = API_SERVER_URI + "/set_scheduled_job/";
+    static String URL_GET_SCHEDULED_JOB = API_SERVER_URI + "/get_scheduled_job/";
 
     // OAuth Client ID
     public static String OAUTH_CLIENT_ID = ""; // OAUTH_CLIENT_ID set at readProperties function
@@ -51,8 +50,10 @@ public class AppConfig {
     public static String OAUTH_CLIENT_SECRET = ""; // OAUTH_CLIENT_SECRET set at readProperties function
 
     // Mosquitto Server configs
-    private static String BROKER_DOMAIN_NAME = ""; // BROKER_DOMAIN_NAME set at readProperties function
-    private static String MQTT_SERVER_SSL_PORT = ""; // MQTT_SERVER_SSL_PORT set at readProperties function
+    public static String MQTT_SERVER_HOST = ""; // MQTT_SERVER_HOST set at readProperties function
+    public static String MQTT_SERVER_PORT = ""; // MQTT_SERVER_PORT set at readProperties function
+    static String MQTT_SERVER_PROTOCOL = ""; // MQTT_SERVER_PROTOCOL set at readProperties function
+    public static boolean MQTT_ENCRYPTED = true; // MQTT_ENCRYPTED set at readProperties function
     static String MQTT_SERVER_URI = ""; // MQTT_SERVER_URI set at readProperties function
     static String MQTT_SERVER_BKS_FILE = ""; // MQTT_SERVER_BKS_FILE set at readProperties function
     static String MQTT_SERVER_BKS_PASSWORD = ""; // MQTT_SERVER_BKS_PASSWORD set at readProperties function
@@ -62,9 +63,7 @@ public class AppConfig {
     static int REQUESTS_TIMEOUT = 15000; // Indicate the maximum time to wait for mqtt client actions to complete
 
     // Device Access Point configs
-    public static String DEVICE_MQTT_SERVER = BROKER_DOMAIN_NAME; // DEVICE_MQTT_SERVER set at readProperties function
-    public static String DEVICE_MQTT_PORT = MQTT_SERVER_SSL_PORT; // DEVICE_MQTT_PORT set at readProperties function
-    public static String DEVICE_GET_ID = "http://10.0.0.1:80/returnid";
+    public static String DEVICE_GET_ID = "http://10.0.0.1:80/return_id";
     public static String DEVICE_SETUP = "http://10.0.0.1:80/autoconfig";
     public static String DEVICE_AP_SSID = "ESP8266";
     public static String DEVICE_AP_PASS = "nalkinscloud";
@@ -106,39 +105,42 @@ public class AppConfig {
         InputStream inputStream = assetManager.open(propertiesFileName);
         properties.load(inputStream);
 
-        DOMAIN_NAME = getProperty("domain_name");
-
-        // WARNING below value will be true only for development!!!
         TRUST_ALL_CERTIFICATES = Boolean.parseBoolean(getProperty("trust_all_certificates"));
+
+        // API configurations read
         SERVER_SSL_CRT_FILE = getProperty("server_ssl_crt_file_name");
-        SERVER_SSL_CRT_HOST_NAME = DOMAIN_NAME;
 
-        SERVER_URI_PATH = getProperty("server_uri_path") + DOMAIN_NAME;
+        API_SERVER_HOST = getProperty("api_server_host");
+        API_SERVER_PORT = getProperty("api_server_port");
+        API_SERVER_PROTOCOL = getProperty("api_server_protocol");
+        API_SERVER_URI = API_SERVER_PROTOCOL + "://" + API_SERVER_HOST + ":" + API_SERVER_PORT;
 
-        URL_AUTHENTICATION = SERVER_URI_PATH + "/token/";
-        URL_REVOKE_TOKEN = SERVER_URI_PATH + "/revoke_token/";
-        URL_REGISTER = SERVER_URI_PATH + "/register/";
-        URL_FORGOT_PASSWORD = SERVER_URI_PATH + "/forgot_password/";
-        URL_RESET_PASSWORD = SERVER_URI_PATH + "/reset_password/";
-        URL_GET_DEVICE_PASS = SERVER_URI_PATH + "/get_device_pass/";
-        URL_REMOVE_DEVICE = SERVER_URI_PATH + "/remove_device/";
-        URL_ACTIVATION = SERVER_URI_PATH + "/device_activation/";
-        URL_DEVICE_LIST = SERVER_URI_PATH + "/device_list/";
-        URL_UPDATE_DEVICE_PASS = SERVER_URI_PATH + "/update_device_pass/";
-        URL_HEALTH_CHECK = SERVER_URI_PATH + "/health_check/";
-        URL_SET_SCHEDULED_JOB = SERVER_URI_PATH + "/set_scheduled_job/";
-        URL_GET_SCHEDULED_JOB = SERVER_URI_PATH + "/get_scheduled_job/";
+        URL_AUTHENTICATION = API_SERVER_URI + "/token/";
+        URL_REVOKE_TOKEN = API_SERVER_URI + "/revoke_token/";
+        URL_REGISTER = API_SERVER_URI + "/register/";
+        URL_FORGOT_PASSWORD = API_SERVER_URI + "/forgot_password/";
+        URL_RESET_PASSWORD = API_SERVER_URI + "/reset_password/";
+        URL_GET_DEVICE_PASS = API_SERVER_URI + "/get_device_pass/";
+        URL_REMOVE_DEVICE = API_SERVER_URI + "/remove_device/";
+        URL_ACTIVATION = API_SERVER_URI + "/device_activation/";
+        URL_DEVICE_LIST = API_SERVER_URI + "/device_list/";
+        URL_UPDATE_DEVICE_PASS = API_SERVER_URI + "/update_device_pass/";
+        URL_HEALTH_CHECK = API_SERVER_URI + "/health_check/";
+        URL_SET_SCHEDULED_JOB = API_SERVER_URI + "/set_scheduled_job/";
+        URL_GET_SCHEDULED_JOB = API_SERVER_URI + "/get_scheduled_job/";
 
         OAUTH_CLIENT_ID = getProperty("oauth_client_id");
         OAUTH_CLIENT_SECRET = getProperty("oauth_client_secret");
 
-        BROKER_DOMAIN_NAME = getProperty("broker_domain_name");
-        MQTT_SERVER_SSL_PORT = getProperty("mqtt_server_ssl_port");
-        MQTT_SERVER_URI = "ssl://" + BROKER_DOMAIN_NAME + ":" + MQTT_SERVER_SSL_PORT;
+        // MQTT broker configs read
+        MQTT_SERVER_HOST = getProperty("mqtt_server_host");
+        MQTT_SERVER_PORT = getProperty("mqtt_server_port");
+        MQTT_SERVER_PROTOCOL = getProperty("mqtt_server_protocol");
+        MQTT_SERVER_URI = MQTT_SERVER_PROTOCOL + "://" + MQTT_SERVER_HOST + ":" + MQTT_SERVER_PORT;
         MQTT_SERVER_BKS_FILE = getProperty("mqtt_server_bks_file_name");
         MQTT_SERVER_BKS_PASSWORD = getProperty("mqtt_server_bks_password");
 
-        DEVICE_MQTT_SERVER = BROKER_DOMAIN_NAME;
-        DEVICE_MQTT_PORT = MQTT_SERVER_SSL_PORT;
+        // In case ssl used set encryption flag to true
+        MQTT_ENCRYPTED = MQTT_SERVER_PROTOCOL.equals("ssl");
     }
 }

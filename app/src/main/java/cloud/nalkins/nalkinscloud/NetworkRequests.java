@@ -129,7 +129,7 @@ public class NetworkRequests extends Application {
             public boolean verify(String hostname, SSLSession session) {
                 HostnameVerifier hostnameVerifier = HttpsURLConnection.getDefaultHostnameVerifier();
                 // Compare the host name, with the one inside the certificate
-                return hostnameVerifier.verify(AppConfig.SERVER_SSL_CRT_HOST_NAME, session);
+                return hostnameVerifier.verify(AppConfig.API_SERVER_HOST, session);
             }
         };
     }
@@ -221,8 +221,7 @@ public class NetworkRequests extends Application {
         TrustManager[] trustAllCerts = new TrustManager[] {
                 new X509TrustManager() {
                     public X509Certificate[] getAcceptedIssuers() {
-                        X509Certificate[] myTrustedAnchors = new X509Certificate[0];
-                        return myTrustedAnchors;
+                        return new X509Certificate[0];
                     }
 
                     @Override
