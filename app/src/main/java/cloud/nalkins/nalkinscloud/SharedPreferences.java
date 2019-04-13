@@ -199,7 +199,7 @@ public class SharedPreferences {
     }
 
     public String getCustomTempValues() {
-        String custom_temp_values = pref.getString(CUSTOM_TEMP_VALUES, "94, 60, 80, 80");
+        String custom_temp_values = pref.getString(CUSTOM_TEMP_VALUES, "94,60,80,80");
         Log.d(TAG, "getCustomTempValues returned: " + custom_temp_values + ", from shared preferences.");
         return custom_temp_values;
     }

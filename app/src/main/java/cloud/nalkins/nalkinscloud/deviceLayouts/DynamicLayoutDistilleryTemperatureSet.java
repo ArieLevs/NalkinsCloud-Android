@@ -30,7 +30,7 @@ public class DynamicLayoutDistilleryTemperatureSet extends AppCompatActivity {
 
     private final String TAG = MqttClient.class.getSimpleName();
 
-    private final int UPDATE_DEVICE_LAYOUT = 3;
+    private final int UPDATE_DEVICE_UI = 3;
 
     SharedPreferences sharedPreferences;
 
@@ -95,8 +95,9 @@ public class DynamicLayoutDistilleryTemperatureSet extends AppCompatActivity {
                 // Send message to UI at MainActivity
                 Bundle extras = getIntent().getExtras();
                 Message msg = MainActivity.uiHandler.obtainMessage();
-                msg.what = UPDATE_DEVICE_LAYOUT;
-                msg.obj = extras.getString("DEVICE_ID") + "/distillery/update_temp_settings" + "-" + 1;
+                msg.what = UPDATE_DEVICE_UI;
+                msg.obj = "{\"topic\":\"" + extras.getString("DEVICE_ID") + "/distillery/update_temp_settings" + "\"," +
+                        "\"message\": \"" + 1 + "\"}";
                 MainActivity.uiHandler.sendMessage(msg);
 
                 sharedPreferences.setIsCustomTempConfigured(true);
@@ -117,8 +118,9 @@ public class DynamicLayoutDistilleryTemperatureSet extends AppCompatActivity {
                 // Send message to UI at MainActivity
                 Bundle extras = getIntent().getExtras();
                 Message msg = MainActivity.uiHandler.obtainMessage();
-                msg.what = UPDATE_DEVICE_LAYOUT;
-                msg.obj = extras.getString("DEVICE_ID") + "/distillery/update_temp_settings" + "-" + 0;
+                msg.what = UPDATE_DEVICE_UI;
+                msg.obj = "{\"topic\":\"" + extras.getString("DEVICE_ID") + "/distillery/update_temp_settings" + "\"," +
+                        "\"message\": \"" + 0 + "\"}";
                 MainActivity.uiHandler.sendMessage(msg);
 
                 sharedPreferences.setIsCustomTempConfigured(false);
