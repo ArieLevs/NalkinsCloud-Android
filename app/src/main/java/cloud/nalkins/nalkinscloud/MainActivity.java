@@ -614,35 +614,6 @@ public class MainActivity extends AppCompatActivity {
                                             temp.setTemperatureConfStatusIcon(R.drawable.x_24);
                                     }
                                     break;
-
-                                    case "ssr_1_status": {
-                                        if(message.equals("1"))
-                                            temp.setDeviceSsrStatusNo1(R.drawable.button_power_green_64);
-                                        if(message.equals("0"))
-                                            temp.setDeviceSsrStatusNo1(R.drawable.button_power_red_64);
-                                    }
-                                    break;
-                                    case "ssr_2_status": {
-                                        if(message.equals("1"))
-                                            temp.setDeviceSsrStatusNo2(R.drawable.button_power_green_64);
-                                        if(message.equals("0"))
-                                            temp.setDeviceSsrStatusNo2(R.drawable.button_power_red_64);
-                                    }
-                                    break;
-                                    case "ssr_3_status": {
-                                        if(message.equals("1"))
-                                            temp.setDeviceSsrStatusNo3(R.drawable.button_power_green_64);
-                                        if(message.equals("0"))
-                                            temp.setDeviceSsrStatusNo3(R.drawable.button_power_red_64);
-                                    }
-                                    break;
-                                    case "ssr_4_status": {
-                                        if(message.equals("1"))
-                                            temp.setDeviceSsrStatusNo4(R.drawable.button_power_green_64);
-                                        if(message.equals("0"))
-                                            temp.setDeviceSsrStatusNo4(R.drawable.button_power_red_64);
-                                    }
-                                    break;
                                 }
                             }
                             break;
@@ -1137,50 +1108,6 @@ public class MainActivity extends AppCompatActivity {
                     if (isChecked)
                         tempLayout.setDistilleryToggleButton(false);
                     }
-            }
-        });
-
-        // Set up a new image to the layout, and set it as clickable
-        tempLayout.switchIcon1.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                final String tmpTopic = topic + "/ssr";
-                // Topic like "device_id/device-type/ssr
-                // Payload is 1 for first ssr
-                MqttService.getStaticHandleMQTT().publishMessage(tmpTopic,"1",
-                        AppConfig.NOT_RETAINED_MESSAGE);
-            }
-        });
-
-        // Set up a new image to the layout, and set it as clickable
-        tempLayout.switchIcon2.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                final String tmpTopic = topic + "/ssr";
-                // Topic like "device-id/device_type/ssr
-                // Payload is 2 for second ssr
-                MqttService.getStaticHandleMQTT().publishMessage(tmpTopic,"2",
-                        AppConfig.NOT_RETAINED_MESSAGE);
-            }
-        });
-
-        // Set up a new image to the layout, and set it as clickable
-        tempLayout.switchIcon3.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                final String tmpTopic = topic + "/ssr";
-                // Topic like "device_id/device_type/ssr
-                // Payload is 3 for third ssr
-                MqttService.getStaticHandleMQTT().publishMessage(tmpTopic,"3",
-                        AppConfig.NOT_RETAINED_MESSAGE);
-            }
-        });
-
-        // Set up a new image to the layout, and set it as clickable
-        tempLayout.switchIcon4.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                final String tmpTopic = topic + "/ssr";
-                // Topic like "device_id/device_type/ssr
-                // Payload is 4 for fourth ssr
-                MqttService.getStaticHandleMQTT().publishMessage(tmpTopic,"4",
-                        AppConfig.NOT_RETAINED_MESSAGE);
             }
         });
 
