@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request.Method;
-import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -29,7 +28,7 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +43,6 @@ import cloud.nalkins.nalkinscloud.SharedPreferences;
 
 /**
  * Class handles the login action of the app
- *
  */
 public class LoginActivity extends AppCompatActivity {
 
@@ -70,17 +68,17 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.action_help:
                 // Start the 'loginHelpFunction' and send the activity context
                 Functions.helpFunction(getApplicationContext());
-                return(true);
+                return (true);
             case R.id.action_legal:
                 // Start the 'legalFunction' and send the activity context
                 Functions.legalFunction(getApplicationContext());
-                return(true);
+                return (true);
         }
-        return(super.onOptionsItemSelected(item));
+        return (super.onOptionsItemSelected(item));
     }
 
     @Override
@@ -90,17 +88,17 @@ public class LoginActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in, R.anim.slide_out); // Set animation when activity starts/ends
 
         //Set email email text fields
-        final TextInputLayout emailWrapper = (TextInputLayout) findViewById(R.id.emailWrapper);
-        final TextInputLayout passwordWrapper = (TextInputLayout) findViewById(R.id.passwordWrapper);
+        final TextInputLayout emailWrapper = findViewById(R.id.emailWrapper);
+        final TextInputLayout passwordWrapper = findViewById(R.id.passwordWrapper);
 
         //Set error hints when validation fail
         emailWrapper.setHint("Email");
         passwordWrapper.setHint("Password");
 
         //Set login register forgot buttons
-        Button loginButton = (Button) findViewById(R.id.loginButton);
-        Button registerButton = (Button) findViewById(R.id.registerButton);
-        Button forgotPassButton = (Button) findViewById(R.id.forgotPasswordButton);
+        Button loginButton = findViewById(R.id.loginButton);
+        Button registerButton = findViewById(R.id.registerButton);
+        Button forgotPassButton = findViewById(R.id.forgotPasswordButton);
 
         // Progress dialog
         pDialog = new ProgressDialog(this);
@@ -126,54 +124,53 @@ public class LoginActivity extends AppCompatActivity {
         sharedPreferences = new SharedPreferences(getApplicationContext());
 
         // Login button function
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideKeyboard();
+        loginButton.setOnClickListener((View v) -> {
 
-                // Get the email and data from text fields
-                String email = emailWrapper.getEditText().getText().toString();
-                String password = passwordWrapper.getEditText().getText().toString();
+            hideKeyboard();
 
-                passwordWrapper.setErrorEnabled(false); //Set password error to false
-                if (Functions.validateEmail(email)) { // If email is valid then
-                    emailWrapper.setErrorEnabled(false); //Set email error to false
-                    if (Functions.isValidPassword(password)) { // If password name is valid then
-                        passwordWrapper.setErrorEnabled(false);
-                        requestNewAccessToken(email, password); //Perform login operation
-                    } else
-                        passwordWrapper.setError("Not a valid password!");
-                } else
-                    emailWrapper.setError("Invalid email");
-
-                //If validation failed for 3 times, then
-                loginAttemptCounter--;
-                if (loginAttemptCounter == 0) {
-                    Toast.makeText(getApplicationContext(), "Forgot your Password?", Toast.LENGTH_SHORT).show();
-                    loginAttemptCounter = 3;
-                // b1.setEnabled(false);
-                }
+            String email = "";
+            String password = "";
+            // Get the email and data from text fields
+            if(emailWrapper.getEditText() != null && passwordWrapper.getEditText() != null) {
+                email = emailWrapper.getEditText().getText().toString();
+                password = passwordWrapper.getEditText().getText().toString();
             }
+
+            passwordWrapper.setErrorEnabled(false); //Set password error to false
+            if (Functions.validateEmail(email)) { // If email is valid then
+                emailWrapper.setErrorEnabled(false); //Set email error to false
+                if (Functions.isValidPassword(password)) { // If password name is valid then
+                    passwordWrapper.setErrorEnabled(false);
+                    requestNewAccessToken(email, password); //Perform login operation
+                } else
+                    passwordWrapper.setError("Not a valid password!");
+            } else
+                emailWrapper.setError("Invalid email");
+
+            //If validation failed for 3 times, then
+            loginAttemptCounter--;
+            if (loginAttemptCounter == 0) {
+                Toast.makeText(getApplicationContext(), "Forgot your Password?", Toast.LENGTH_SHORT).show();
+                loginAttemptCounter = 3;
+                // b1.setEnabled(false);
+            }
+
         });
 
         //Register button function
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent regIntent = new Intent(getApplicationContext(),
-                        RegisterActivity.class);
-                startActivity(regIntent);
-            }
+        registerButton.setOnClickListener((View v) -> {
+            Intent regIntent = new Intent(getApplicationContext(),
+                    RegisterActivity.class);
+            startActivity(regIntent);
+
         });
 
         //Forgot password button function
-        forgotPassButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),
-                        ForgotPasswordActivity.class);
-                startActivity(intent);
-            }
+        forgotPassButton.setOnClickListener((View v) -> {
+            Intent intent = new Intent(getApplicationContext(),
+                    ForgotPasswordActivity.class);
+            startActivity(intent);
+
         });
     }
 
@@ -200,72 +197,64 @@ public class LoginActivity extends AppCompatActivity {
 
         // Start new StringRequest (HTTP)
         StringRequest strReq = new StringRequest(Method.POST,
-                AppConfig.URL_AUTHENTICATION, new Response.Listener<String>() {
+                AppConfig.URL_AUTHENTICATION, (String response) -> {
 
-            @Override
-            public void onResponse(String response) {
+            hideDialog.sendToTarget();
+            Log.d(TAG, "Login Response: " + response);
+            try {
+                JSONObject jObj = new JSONObject(response);
+                String token = jObj.getString("access_token");
+                // Check if the token contains any values
+                if (!token.equals("")) {
+                    // user successfully logged in
+                    // Create login session
+                    sharedPreferences.setToken(token);
+                    sharedPreferences.setRefreshToken(jObj.getString("refresh_token"));
+                    sharedPreferences.setUsername(username);
 
-                hideDialog.sendToTarget();
-                Log.d(TAG, "Login Response: " + response);
-                try {
-                    JSONObject jObj = new JSONObject(response);
-                    String token = jObj.getString("access_token");
-                    // Check if the token contains any values
-                    if (!token.equals("")) {
-                        // user successfully logged in
-                        // Create login session
-                        sharedPreferences.setToken(token);
-                        sharedPreferences.setRefreshToken(jObj.getString("refresh_token"));
-                        sharedPreferences.setUsername(username);
-
-                        // Launch main activity
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        getApplicationContext().startActivity(intent);
-                        finish();
-                    } else {
-                        // Error in login. Get the error message
-                        Log.d(TAG, "Error message: " + jObj.getString("error_msg"));
-                        Toast.makeText(getApplicationContext(), "Log in failed", Toast.LENGTH_LONG).show();
-                    }
-                } catch (JSONException e) {
-                    // JSON error
-                    e.printStackTrace();
-                    Log.d(TAG, "doLogin Thread error: " + e.toString());
-                    Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if(error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Log.e(TAG, "Server Time out error or no connection");
-                    Toast.makeText(getApplicationContext(),
-                            "Timeout error! Server is not responding",
-                            Toast.LENGTH_LONG).show();
+                    // Launch main activity
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    getApplicationContext().startActivity(intent);
+                    finish();
                 } else {
-                    String body;
-                    try {
-                        //get status code here
-                        String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        Log.e(TAG, "Server response code: " + statusCode);
-                    } catch (NullPointerException e) {
-                        e.printStackTrace();
-                    }
-
-                    //get response body and parse with appropriate encoding
-                    try {
-                        body = new String(error.networkResponse.data, "UTF-8");
-                        Log.e(TAG, "Login Error: " + body);
-                        Toast.makeText(getApplicationContext(),
-                                "Wrong credentials or email was not verified",
-                                Toast.LENGTH_LONG).show();
-                    } catch (UnsupportedEncodingException | NullPointerException e) {
-                        e.printStackTrace();
-                    }
+                    // Error in login. Get the error message
+                    Log.d(TAG, "Error message: " + jObj.getString("error_msg"));
+                    Toast.makeText(getApplicationContext(), "Log in failed", Toast.LENGTH_LONG).show();
                 }
-                hideDialog.sendToTarget();
+            } catch (JSONException e) {
+                // JSON error
+                e.printStackTrace();
+                Log.d(TAG, "doLogin Thread error: " + e.toString());
+                Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
+        }, (VolleyError error) -> {
+            if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                Log.e(TAG, "Server Time out error or no connection");
+                Toast.makeText(getApplicationContext(),
+                        "Timeout error! Server is not responding",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                String body;
+                try {
+                    //get status code here
+                    String statusCode = String.valueOf(error.networkResponse.statusCode);
+                    Log.e(TAG, "Server response code: " + statusCode);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+
+                //get response body and parse with appropriate encoding
+                try {
+                    body = new String(error.networkResponse.data, StandardCharsets.UTF_8);
+                    Log.e(TAG, "Login Error: " + body);
+                    Toast.makeText(getApplicationContext(),
+                            "Wrong credentials or email was not verified",
+                            Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            hideDialog.sendToTarget();
         }) {
             // Set the OAUTH2 header to hold the client ID + client secret
             @Override
@@ -283,7 +272,7 @@ public class LoginActivity extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 // Posting parameters to login url
                 Map<String, String> params = new HashMap<>();
-                params.put("grant_type","password");
+                params.put("grant_type", "password");
                 params.put("username", username);
                 params.put("password", password);
                 return params;
@@ -296,6 +285,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Override the back button option
     private Boolean exit = false;
+
     @Override
     public void onBackPressed() {
         if (exit) {
@@ -304,12 +294,9 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Press Back again to Exit.",
                     Toast.LENGTH_SHORT).show();
             exit = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exit = false;
-                }
-            }, 3 * 1000);
+            new Handler().postDelayed(() -> {
+                exit = false;
+                },3 * 1000);
         }
     }
 }

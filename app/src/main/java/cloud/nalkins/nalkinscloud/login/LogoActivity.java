@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -24,7 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +36,7 @@ import cloud.nalkins.nalkinscloud.SharedPreferences;
 
 /**
  * Created by Arie on 3/25/2017.
- *
+ * <p>
  * This is the first activity to run once the application starts
  */
 public class LogoActivity extends AppCompatActivity {
@@ -98,7 +97,7 @@ public class LogoActivity extends AppCompatActivity {
      * If all is valid, a success message will return containing logged in username
      * If there was an error, login activity will start
      * If received unauthorized response, try getting new access token
-    */
+     */
     private void getUsernameFromServer() {
         Log.d(TAG, "Running 'getUsernameFromServer' function");
         String tag_check_health = "req_check_health";
@@ -110,67 +109,59 @@ public class LogoActivity extends AppCompatActivity {
         showDialog.sendToTarget();
 
         JsonObjectRequest strReq = new JsonObjectRequest(Request.Method.POST,
-                AppConfig.URL_HEALTH_CHECK, new JSONObject(), new Response.Listener<JSONObject>() {
+                AppConfig.URL_HEALTH_CHECK, new JSONObject(), (JSONObject response) -> {
 
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.d(TAG, "Health check Response: " + response.toString());
-                try {
-                    String status = response.getString("status");
-                    // Check if status is success
-                    if (status.equals("success")) {
-                        // Users access token valid
-                        sharedPreferences.setUsername(response.getString("message")); // Store the current username to shared preferences
+            Log.d(TAG, "Health check Response: " + response.toString());
+            try {
+                String status = response.getString("status");
+                // Check if status is success
+                if (status.equals("success")) {
+                    // Users access token valid
+                    sharedPreferences.setUsername(response.getString("message")); // Store the current username to shared preferences
 
-                        // Launch main activity
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        getApplicationContext().startActivity(intent);
-                        finish();
-                    } else {
-                        Log.e(TAG, "Somethings wrong with server response, " +
-                                "Check server side!");
-                        lunchLoginActivity();
-                    }
-                } catch (JSONException e) {
-                    // JSON error
-                    Log.e(TAG, "Json error: " + e.toString());
-                    Toast.makeText(getApplicationContext(),
-                            "Something is wrong with the server," +
-                                    "Please try later", Toast.LENGTH_LONG).show();
+                    // Launch main activity
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    getApplicationContext().startActivity(intent);
                     finish();
-                }
-                hideDialog.sendToTarget();
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                if(error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Log.e(TAG, error.toString());
-                    Toast.makeText(getApplicationContext(), "Server Time out error or no connection", Toast.LENGTH_LONG).show();
-                    finish();
-                    hideDialog.sendToTarget();
                 } else {
-                    // Get response body and parse with appropriate encoding
-                    if (error.networkResponse.data != null) {
-                        try {
-                            String statusCode = String.valueOf(error.networkResponse.statusCode);
-                            Log.e(TAG, "Server response code: " + statusCode);
-                            String body = new String(error.networkResponse.data, "UTF-8");
-                            Log.e(TAG, "Login Error: " + body);
-                            if(error.networkResponse.statusCode == 401) { // Unauthorized
-                                requestNewToken();
-                            } else {
-                                lunchLoginActivity();
-                                hideDialog.sendToTarget();
-                            }
-
-                        } catch (UnsupportedEncodingException e) {
-                            Log.e(TAG, e.toString());
-                            finish();
+                    Log.e(TAG, "Somethings wrong with server response, " +
+                            "Check server side!");
+                    lunchLoginActivity();
+                }
+            } catch (JSONException e) {
+                // JSON error
+                Log.e(TAG, "Json error: " + e.toString());
+                Toast.makeText(getApplicationContext(),
+                        "Something is wrong with the server," +
+                                "Please try later", Toast.LENGTH_LONG).show();
+                finish();
+            }
+            hideDialog.sendToTarget();
+        }, (VolleyError error) -> {
+            if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                Log.e(TAG, error.toString());
+                Toast.makeText(getApplicationContext(), "Server Time out error or no connection", Toast.LENGTH_LONG).show();
+                finish();
+                hideDialog.sendToTarget();
+            } else {
+                // Get response body and parse with appropriate encoding
+                if (error.networkResponse.data != null) {
+                    try {
+                        String statusCode = String.valueOf(error.networkResponse.statusCode);
+                        Log.e(TAG, "Server response code: " + statusCode);
+                        String body = new String(error.networkResponse.data, StandardCharsets.UTF_8);
+                        Log.e(TAG, "Login Error: " + body);
+                        if (error.networkResponse.statusCode == 401) { // Unauthorized
+                            requestNewToken();
+                        } else {
+                            lunchLoginActivity();
                             hideDialog.sendToTarget();
                         }
+
+                    } catch (Exception e) {
+                        Log.e(TAG, e.toString());
+                        finish();
+                        hideDialog.sendToTarget();
                     }
                 }
             }
@@ -201,72 +192,66 @@ public class LogoActivity extends AppCompatActivity {
 
         // Start new StringRequest (HTTP)
         StringRequest strReq = new StringRequest(Request.Method.POST,
-                AppConfig.URL_AUTHENTICATION, new Response.Listener<String>() {
+                AppConfig.URL_AUTHENTICATION, (String response) -> {
 
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "Refresh Token Response: " + response);
-                try {
-                    JSONObject jObj = new JSONObject(response);
-                    String token = jObj.getString("access_token");
-                    // Check if the token contains any values
-                    if (!token.equals("")) {
-                        // user successfully logged in
-                        // Create login session
-                        sharedPreferences.setToken(token);
-                        sharedPreferences.setRefreshToken(jObj.getString("refresh_token"));
+            Log.d(TAG, "Refresh Token Response: " + response);
+            try {
+                JSONObject jObj = new JSONObject(response);
+                String token = jObj.getString("access_token");
+                // Check if the token contains any values
+                if (!token.equals("")) {
+                    // user successfully logged in
+                    // Create login session
+                    sharedPreferences.setToken(token);
+                    sharedPreferences.setRefreshToken(jObj.getString("refresh_token"));
 
-                        getUsernameFromServer();
-                    } else {
-                        // Error in login. Get the error message
-                        Log.d(TAG, "Error message: " + jObj.getString("error_msg"));
-                        Toast.makeText(getApplicationContext(), "Refresh Token failed", Toast.LENGTH_LONG).show();
-
-                        lunchLoginActivity();
-                    }
-                } catch (JSONException e) {
-                    // JSON error
-                    Log.d(TAG, "Refresh Token error: " + e.toString());
-                    Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    lunchLoginActivity();
-                }
-                hideDialog.sendToTarget();
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if(error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Log.e(TAG, "Server Time out error or no connection");
-                    Toast.makeText(getApplicationContext(),
-                            "Timeout error! Server is not responding",
-                            Toast.LENGTH_LONG).show();
+                    getUsernameFromServer();
                 } else {
-                    String body;
-                    //get status code here
-                    String statusCode = String.valueOf(error.networkResponse.statusCode);
-                    Log.e(TAG, "Server response code: " + statusCode);
-                    //get response body and parse with appropriate encoding
-                    if (error.networkResponse.data != null) {
-                        try {
-                            body = new String(error.networkResponse.data, "UTF-8");
-                            Log.e(TAG, "Refresh Token Error: " + body);
-                            Toast.makeText(getApplicationContext(),
-                                    "Failed To Auto Authenticate", Toast.LENGTH_LONG).show();
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                            Log.e(TAG, e.toString());
-                        }
-                    }
+                    // Error in login. Get the error message
+                    Log.d(TAG, "Error message: " + jObj.getString("error_msg"));
+                    Toast.makeText(getApplicationContext(), "Refresh Token failed", Toast.LENGTH_LONG).show();
+
                     lunchLoginActivity();
                 }
-                hideDialog.sendToTarget();
+            } catch (JSONException e) {
+                // JSON error
+                Log.d(TAG, "Refresh Token error: " + e.toString());
+                Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                lunchLoginActivity();
             }
+            hideDialog.sendToTarget();
+
+        }, (VolleyError error) -> {
+            if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                Log.e(TAG, "Server Time out error or no connection");
+                Toast.makeText(getApplicationContext(),
+                        "Timeout error! Server is not responding",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                String body;
+                //get status code here
+                String statusCode = String.valueOf(error.networkResponse.statusCode);
+                Log.e(TAG, "Server response code: " + statusCode);
+                //get response body and parse with appropriate encoding
+                if (error.networkResponse.data != null) {
+                    try {
+                        body = new String(error.networkResponse.data, StandardCharsets.UTF_8);
+                        Log.e(TAG, "Refresh Token Error: " + body);
+                        Toast.makeText(getApplicationContext(),
+                                "Failed To Auto Authenticate", Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e(TAG, e.toString());
+                    }
+                }
+                lunchLoginActivity();
+            }
+            hideDialog.sendToTarget();
         }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("grant_type","refresh_token");
+                params.put("grant_type", "refresh_token");
                 params.put("client_id", AppConfig.OAUTH_CLIENT_ID);
                 params.put("client_secret", AppConfig.OAUTH_CLIENT_SECRET);
                 params.put("refresh_token", sharedPreferences.getRefreshToken());

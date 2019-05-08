@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -34,7 +33,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,11 +45,10 @@ import cloud.nalkins.nalkinscloud.R;
 
 /**
  * Created by Arie on 4/8/2017.
- *
+ * <p>
  * This activity is the first step of adding a new device,
  * It will give the user a brief instruction,
  * and and option to continue or cancel the process
- *
  */
 public class DeviceAddNewActivity extends AppCompatActivity {
 
@@ -110,24 +108,16 @@ public class DeviceAddNewActivity extends AppCompatActivity {
         };
 
         //Set buttons
-        Button btn_cancel = (Button) findViewById(R.id.cancelButton);
-        Button btn_continue = (Button) findViewById(R.id.confirmButton);
+        Button btn_cancel = findViewById(R.id.cancelButton);
+        Button btn_continue = findViewById(R.id.confirmButton);
 
         // Cancel button function
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        btn_cancel.setOnClickListener((View v) -> finish());
 
         // Continue button function
-        btn_continue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Start wifi scan and check if device found
-                searchNewDevice();
-            }
+        btn_continue.setOnClickListener((View v) -> {
+            // Start wifi scan and check if device found
+            searchNewDevice();
         });
 
         //HandleWifiConnection.setupWifiManager(getApplicationContext());
@@ -174,7 +164,7 @@ public class DeviceAddNewActivity extends AppCompatActivity {
                         while (HandleWifiConnection.isScannedNetworksListEmpty()) {
                             counter++;
                             // If 15 seconds passed, or ScanCompleted then return
-                            if(counter == 15 || HandleWifiConnection.isNetworkScanCompleted()) {
+                            if (counter == 15 || HandleWifiConnection.isNetworkScanCompleted()) {
                                 Toast.makeText(getApplicationContext(), "No networks found", Toast.LENGTH_LONG).show();
 
                                 // Send hide dialog box to UI Thread
@@ -191,7 +181,7 @@ public class DeviceAddNewActivity extends AppCompatActivity {
 
                         // Iterate each network, and search if our AppConfig.DEVICE_AP_SSID found
                         for (int i = 0; i < N; ++i) {
-                            if(AppConfig.DEVICE_AP_SSID.equals(HandleWifiConnection.scannedNetworks.get(i).SSID))
+                            if (AppConfig.DEVICE_AP_SSID.equals(HandleWifiConnection.scannedNetworks.get(i).SSID))
                                 foundDevice = true;
                         }
 
@@ -199,23 +189,24 @@ public class DeviceAddNewActivity extends AppCompatActivity {
                             Log.d(TAG, AppConfig.DEVICE_AP_SSID + " Found, moving on");
 
                             // Create vibrate
-                            Vibrator vibrator = (Vibrator)getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-                            try {
-                                vibrator.vibrate(150);
-                            } catch (NullPointerException e) {
-                                e.printStackTrace();
+                            Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+                            if (vibrator != null) {
+                                try {
+                                    vibrator.vibrate(150);
+                                } catch (NullPointerException e) {
+                                    e.printStackTrace();
+                                }
                             }
 
 
                             // Make sound
                             ToneGenerator toneGen = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
-                            toneGen.startTone(ToneGenerator.TONE_CDMA_PIP,100);
+                            toneGen.startTone(ToneGenerator.TONE_CDMA_PIP, 100);
 
                             // Start 'connectToDevice'
                             //Functions.hideDialog(pDialog); // Stop dialog
                             connectToDevice();
-                        }
-                        else {
+                        } else {
                             Log.d(TAG, AppConfig.DEVICE_AP_SSID + " Was not found, going back");
 
                             // Send hide dialog box to UI Thread
@@ -251,7 +242,7 @@ public class DeviceAddNewActivity extends AppCompatActivity {
                     Log.d(TAG, "Location permission granted");
                     locationPermFlag = true;
                     //addNewDevice();
-                } else if (grantResults[0] == PackageManager.PERMISSION_DENIED){
+                } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     if (ActivityCompat.shouldShowRequestPermissionRationale(DeviceAddNewActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                         Log.d(TAG, "Location permission was not granted");
                         Toast.makeText(getApplicationContext(), "Location permission must be granted to scan Wifi", Toast.LENGTH_LONG).show();
@@ -268,8 +259,7 @@ public class DeviceAddNewActivity extends AppCompatActivity {
                                 //});
                                 .create()
                                 .show();
-                    }
-                    else{
+                    } else {
                         Log.d(TAG, "Location permission was not granted, using 'never ask again'");
                         locationPermFlag = false;
                         Toast.makeText(getApplicationContext(), "Location permission must be granted to scan Wifi", Toast.LENGTH_LONG).show();
@@ -377,78 +367,70 @@ public class DeviceAddNewActivity extends AppCompatActivity {
         params.put("give_id", true);
 
         JsonObjectRequest strReq = new JsonObjectRequest(Request.Method.POST,
-                AppConfig.DEVICE_GET_ID, new JSONObject(params), new Response.Listener<JSONObject>() {
+                AppConfig.DEVICE_GET_ID, new JSONObject(params), (JSONObject response) -> {
 
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.d(TAG, "Device Response: " + response.toString());
+            Log.d(TAG, "Device Response: " + response.toString());
 
-                // Send hide dialog box to UI Thread
-                Message hideDialog =
-                        uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
-                hideDialog.sendToTarget();
-                try {
-                    String status = response.getString("status");
-                    // Check if response contains any values
-                    if (status.equals("success")) {
-                        // device successfully returned its id
-                        deviceID = response.getString("device_id");
-                        deviceType = response.getString("device_type");
+            // Send hide dialog box to UI Thread
+            Message hideDialog =
+                    uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
+            hideDialog.sendToTarget();
+            try {
+                String status = response.getString("status");
+                // Check if response contains any values
+                if (status.equals("success")) {
+                    // device successfully returned its id
+                    deviceID = response.getString("device_id");
+                    deviceType = response.getString("device_type");
 
-                        Functions.stopWifiConnectionProcedure(getApplication());
+                    Functions.stopWifiConnectionProcedure(getApplication());
 
-                        HandleWifiConnection.destroyWifiManager();
+                    HandleWifiConnection.destroyWifiManager();
 
-                        // Launch get Wifi credentials activity
-                        Intent intent = new Intent(DeviceAddNewActivity.this,
-                                DeviceSetNameActivity.class);
-                        startActivity(intent);
+                    // Launch get Wifi credentials activity
+                    Intent intent = new Intent(DeviceAddNewActivity.this,
+                            DeviceSetNameActivity.class);
+                    startActivity(intent);
 
-                    } else {
-                        // Error in configuration. Get the error message
-                        Toast.makeText(getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
-                        // Function will stop connection to device AP
-                        Functions.stopWifiConnectionProcedure(getApplication());
-                    }
-                } catch (JSONException e) {
-                    // JSON error
-                    Log.d(TAG, "Json error: " + e.toString());
-                    Toast.makeText(getApplicationContext(), "Device Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    // Error in configuration. Get the error message
+                    Toast.makeText(getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
                     // Function will stop connection to device AP
                     Functions.stopWifiConnectionProcedure(getApplication());
                 }
-
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "onErrorResponse is: " + error);
-
-                // Send hide dialog box to UI Thread
-                Message hideDialog =
-                        uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
-                hideDialog.sendToTarget();
-
-                if(error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Log.e(TAG, "Device Time out error or no connection");
-                    Toast.makeText(getApplicationContext(), "Timeout error! Device is not responding", Toast.LENGTH_LONG).show();
-                } else {
-
-                    String body;
-                    if (error.networkResponse.data != null) {
-                        try {
-                            body = new String(error.networkResponse.data, "UTF-8");
-                            Log.e(TAG, "Activation Error: " + body);
-                            Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+            } catch (JSONException e) {
+                // JSON error
+                Log.d(TAG, "Json error: " + e.toString());
+                Toast.makeText(getApplicationContext(), "Device Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 // Function will stop connection to device AP
                 Functions.stopWifiConnectionProcedure(getApplication());
             }
+        }, (VolleyError error) -> {
+            Log.e(TAG, "onErrorResponse is: " + error);
+
+            // Send hide dialog box to UI Thread
+            Message hideDialog =
+                    uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
+            hideDialog.sendToTarget();
+
+            if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                Log.e(TAG, "Device Time out error or no connection");
+                Toast.makeText(getApplicationContext(), "Timeout error! Device is not responding", Toast.LENGTH_LONG).show();
+            } else {
+
+                String body;
+                if (error.networkResponse.data != null) {
+                    try {
+                        body = new String(error.networkResponse.data, StandardCharsets.UTF_8);
+                        Log.e(TAG, "Activation Error: " + body);
+                        Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            // Function will stop connection to device AP
+            Functions.stopWifiConnectionProcedure(getApplication());
         });
 
         // Adding request to request queue
@@ -461,8 +443,7 @@ public class DeviceAddNewActivity extends AppCompatActivity {
      *
      * @return String Return current device id
      */
-    public static String getDeviceId()
-    {
+    public static String getDeviceId() {
         return deviceID;
     }
 
@@ -472,8 +453,7 @@ public class DeviceAddNewActivity extends AppCompatActivity {
      *
      * @return String Return current device type
      */
-    public static String getDeviceType()
-    {
+    public static String getDeviceType() {
         return deviceType;
     }
 }

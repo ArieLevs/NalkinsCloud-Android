@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -29,7 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -245,10 +244,7 @@ public class MainActivity extends AppCompatActivity {
         String tag_device_list_req = "req_device_list";
 
         JsonObjectRequest strReq = new JsonObjectRequest(Request.Method.POST,
-                AppConfig.URL_DEVICE_LIST, new JSONObject(), new Response.Listener<JSONObject>() {
-
-            @Override
-            public void onResponse(JSONObject response) {
+                AppConfig.URL_DEVICE_LIST, new JSONObject(), (JSONObject response) -> {
                 Log.d(TAG, "Device List Response: " + response.toString());
 
                 try {
@@ -287,11 +283,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "getDeviceListFromServer Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
                 deviceListUpdatedByServer = true;
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
+        }, (VolleyError error) -> {
                 try {
                     if (error instanceof TimeoutError || error instanceof NoConnectionError) {
                         Log.e(TAG, "Server Time out error or no connection");
@@ -304,10 +296,10 @@ public class MainActivity extends AppCompatActivity {
                             //get response body and parse with appropriate encoding
                             if (error.networkResponse.data != null) {
                                 try {
-                                    body = new String(error.networkResponse.data, "UTF-8");
+                                    body = new String(error.networkResponse.data, StandardCharsets.UTF_8);
                                     Log.e(TAG, "Device list error: " + body);
                                     Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
-                                } catch (UnsupportedEncodingException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -321,7 +313,6 @@ public class MainActivity extends AppCompatActivity {
 
                 deviceListUpdatedByServer = true;
                 hideDialog.sendToTarget();
-            }
         }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -636,9 +627,7 @@ public class MainActivity extends AppCompatActivity {
                 .setMessage("Warning, Android will stop receiving messages from NalkinsCloud. " +
                         "Do you really want to logout?")
                 .setIcon(R.drawable.warning_64)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int whichButton) {
+                .setPositiveButton(android.R.string.yes, (DialogInterface dialog, int whichButton) -> {
                         sharedPreferences.removeUsername(); // Remove username from shared preferences
                         sharedPreferences.removeToken();
                         // Stop MQTT service
@@ -650,7 +639,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
-                    }})
+                    })
                 .setNegativeButton(android.R.string.no, null).show();
     }
 
@@ -667,11 +656,10 @@ public class MainActivity extends AppCompatActivity {
                 .setMessage("Warning, device will be removed from your account, " +
                         "Do you really want to remove this device?")
                 .setIcon(R.drawable.warning_64)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int whichButton) {
+                .setPositiveButton(android.R.string.yes, (DialogInterface dialog, int whichButton) -> {
+                        // Execute remove device function
                         removeDeviceFromAccount(deviceId);
-                    }})
+                    })
                 .setNegativeButton(android.R.string.no, null).show();
     }
 
@@ -689,10 +677,8 @@ public class MainActivity extends AppCompatActivity {
         JSONObject jsonObject = new JSONObject(params);
         Log.d(TAG, jsonObject.toString());
         JsonObjectRequest strReq = new JsonObjectRequest(Request.Method.POST,
-                AppConfig.URL_REMOVE_DEVICE, new JSONObject(params), new Response.Listener<JSONObject>() {
+                AppConfig.URL_REMOVE_DEVICE, new JSONObject(params), (JSONObject response) -> {
 
-            @Override
-            public void onResponse(JSONObject response) {
                 Log.d(TAG, "Remove Device response: " + response.toString());
                 Functions.hideDialog(pDialog);
 
@@ -715,12 +701,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "Json error: " + e.toString());
                     Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-            }
-        }, new Response.ErrorListener() {
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
+        }, (VolleyError error) -> {
                 if(error instanceof TimeoutError || error instanceof NoConnectionError) {
                     Log.e(TAG, "Server Time out error or no connection");
                 } else {
@@ -728,10 +710,10 @@ public class MainActivity extends AppCompatActivity {
                     //get response body and parse with appropriate encoding
                     if (error.networkResponse.data != null) {
                         try {
-                            body = new String(error.networkResponse.data, "UTF-8");
+                            body = new String(error.networkResponse.data, StandardCharsets.UTF_8);
                             Log.e(TAG, "Error: " + body);
                             Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
-                        } catch (UnsupportedEncodingException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -743,7 +725,6 @@ public class MainActivity extends AppCompatActivity {
                 Functions.hideDialog(pDialog);
                 finish();
                 startActivity(getIntent());
-            }
         }) {
             @Override
             public Map<String, String> getHeaders() {
@@ -773,12 +754,7 @@ public class MainActivity extends AppCompatActivity {
             exit = true;
 
             // If 3 seconds pass then force user to start process again
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exit = false;
-                }
-            }, 3 * 1000);
+            new Handler().postDelayed(() -> exit = false, 3 * 1000);
         }
     }
 
@@ -792,7 +768,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "running 'setActiveDevices' Function");
 
         // Set parent layout (this is the main layout)
-        LinearLayout mainLayout = (LinearLayout)findViewById(R.id.dynamicDeviceLayout);
+        LinearLayout mainLayout = findViewById(R.id.dynamicDeviceLayout);
 
         for(int i = 0; i < devicesList.size(); i++) {
             // Get each array value (HashMap) from devicesList
@@ -833,39 +809,31 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Show additional device settings options
-        tempLayout.getOptionsIcon().setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (tempLayout.getDeviceOptionsLayout().getVisibility() == View.VISIBLE){ // If the manual conf layout made visible
-                    tempLayout.getDeviceOptionsLayout().setVisibility(View.GONE);// Show the layout
-                } else { // If the manual conf layout made invisible
-                    tempLayout.getDeviceOptionsLayout().setVisibility(View.VISIBLE);// Show the layout
-                }
+        tempLayout.getOptionsIcon().setOnClickListener((View v) -> {
+            if (tempLayout.getDeviceOptionsLayout().getVisibility() == View.VISIBLE) { // If the manual conf layout made visible
+                tempLayout.getDeviceOptionsLayout().setVisibility(View.GONE);// Show the layout
+            } else { // If the manual conf layout made invisible
+                tempLayout.getDeviceOptionsLayout().setVisibility(View.VISIBLE);// Show the layout
             }
         });
 
         // Remove device from application
-        tempLayout.getRemoveIcon().setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                removeDeviceAlert(deviceMap.get("device_id"));
-            }
-        });
+        tempLayout.getRemoveIcon().setOnClickListener((View v) -> removeDeviceAlert(deviceMap.get("device_id")) );
 
-        tempLayout.getDeviceIcon().setOnClickListener(new View.OnClickListener() {
-              public void onClick(View v) {
-                  if (tempLayout.isDeviceOnline()) {
-                      MqttService.getStaticHandleMQTT().publishMessage(deviceMap.get("device_id") +
-                              "/" +
-                              deviceMap.get("device_type") +
-                              "/update_now", "1", AppConfig.NOT_RETAINED_MESSAGE);
-                      Toast.makeText(getApplicationContext(),
-                              "Updating " + deviceMap.get("device_id") + " status",
-                              Toast.LENGTH_SHORT).show();
-                  } else {
-                    Toast.makeText(getApplicationContext(),
-                            "Device cannot be used while in 'offline' state",
-                            Toast.LENGTH_SHORT).show();
-                }
-              }
+        tempLayout.getDeviceIcon().setOnClickListener((View v) -> {
+              if (tempLayout.isDeviceOnline()) {
+                  MqttService.getStaticHandleMQTT().publishMessage(deviceMap.get("device_id") +
+                          "/" +
+                          deviceMap.get("device_type") +
+                          "/update_now", "1", AppConfig.NOT_RETAINED_MESSAGE);
+                  Toast.makeText(getApplicationContext(),
+                          "Updating " + deviceMap.get("device_id") + " status",
+                          Toast.LENGTH_SHORT).show();
+              } else {
+                Toast.makeText(getApplicationContext(),
+                        "Device cannot be used while in 'offline' state",
+                        Toast.LENGTH_SHORT).show();
+            }
           });
 
         mainLayout.addView(tempLayout.getView());
@@ -879,24 +847,18 @@ public class MainActivity extends AppCompatActivity {
 
         final String topic = deviceMap.get("device_id") + "/" + deviceMap.get("device_type");
 
-        tempLayout.getOptionsIcon().setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (tempLayout.getDeviceOptionsLayout().getVisibility() == View.VISIBLE){ // If the manual conf layout made visible
-                    tempLayout.getDeviceOptionsLayout().setVisibility(View.GONE);// Show the layout
-                } else { // If the manual conf layout made invisible
-                    tempLayout.getDeviceOptionsLayout().setVisibility(View.VISIBLE);// Show the layout
-                }
+        tempLayout.getOptionsIcon().setOnClickListener((View v) -> {
+            if (tempLayout.getDeviceOptionsLayout().getVisibility() == View.VISIBLE){ // If the manual conf layout made visible
+                tempLayout.getDeviceOptionsLayout().setVisibility(View.GONE);// Show the layout
+            } else { // If the manual conf layout made invisible
+                tempLayout.getDeviceOptionsLayout().setVisibility(View.VISIBLE);// Show the layout
             }
         });
 
-        tempLayout.getRemoveIcon().setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                removeDeviceAlert(deviceMap.get("device_id"));
-            }
-        });
+        tempLayout.getRemoveIcon().setOnClickListener((View v) -> removeDeviceAlert(deviceMap.get("device_id")));
 
-        tempLayout.getSwitchToggleButton().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        tempLayout.getSwitchToggleButton().setOnCheckedChangeListener((CompoundButton buttonView, boolean isChecked) -> {
+
                 // If device id in offline state, no action should be available
                 if (tempLayout.getIsDeviceOnline()) {
                     if (isChecked) {
@@ -919,7 +881,7 @@ public class MainActivity extends AppCompatActivity {
                     if (isChecked)
                         tempLayout.setSwitchToggleButton(false);
                 }
-            }
+
         });
 
         mainLayout.addView(tempLayout.getView());
@@ -939,65 +901,63 @@ public class MainActivity extends AppCompatActivity {
         final MqttClient handleMQTT = MqttService.getStaticHandleMQTT(); // Get mqtt client object
 
         // Set 'magnet' layout (the object) icon, and set it as clickable
-        tempLayout.getDeviceIcon().setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // If device id in offline state, no action should be available
-                if(tempLayout.isDeviceOnline()) {
-                    // If current 'DeviceStatus' text is set to 'alarm' then
-                    if (tempLayout.getIsTriggeredReleasedStatusText().getText().equals("Alarm")) {
-                        // Set the 'tmpTopic' to
-                        String tmpTopic = topic + "/release_alarm";
-                        // And publish the message (to release the alarm)
-                        handleMQTT.publishMessage(tmpTopic, "1", AppConfig.NOT_RETAINED_MESSAGE);
-                        // Then switch the icon back to "normal" magnet icon
-                        tempLayout.setDeviceIcon(R.drawable.magnet_main_64);
+        tempLayout.getDeviceIcon().setOnClickListener((View v) -> {
+            // If device id in offline state, no action should be available
+            if(tempLayout.isDeviceOnline()) {
+                // If current 'DeviceStatus' text is set to 'alarm' then
+                if (tempLayout.getIsTriggeredReleasedStatusText().getText().equals("Alarm")) {
+                    // Set the 'tmpTopic' to
+                    String tmpTopic = topic + "/release_alarm";
+                    // And publish the message (to release the alarm)
+                    handleMQTT.publishMessage(tmpTopic, "1", AppConfig.NOT_RETAINED_MESSAGE);
+                    // Then switch the icon back to "normal" magnet icon
+                    tempLayout.setDeviceIcon(R.drawable.magnet_main_64);
 
-                        // Then once the alarm was stopped, the magnet status needs to change
-                        // Set the 'tmpTopic' to
-                        tmpTopic = topic + "/set_lock_status";
+                    // Then once the alarm was stopped, the magnet status needs to change
+                    // Set the 'tmpTopic' to
+                    tmpTopic = topic + "/set_lock_status";
+                    // Set 'DeviceStatus' text to 'released'
+                    tempLayout.setIsTriggeredReleasedStatusText("Released");
+                    tempLayout.setIsTriggeredReleasedStatusTextColor(R.color.red); // Set text color
+                    // And publish to device that its on 'released' state
+                    handleMQTT.publishMessage(tmpTopic, "0", AppConfig.NOT_RETAINED_MESSAGE);
+
+                    tmpTopic = topic + "/alarm";
+                    handleMQTT.publishMessage(tmpTopic, "0", AppConfig.RETAINED_MESSAGE);
+                    // Mark that we sent 'released'
+                    sharedPreferences.setIsReleasedTriggered("Released");
+                } else { // If current 'DeviceStatus' text is NOT set to 'alarm' then
+                    // Set the 'tmpTopic' to
+                    final String tmpTopic = topic + "/set_lock_status";
+                    // If last message sent to device was 'release',
+                    // then now (on button click) it should send 'triggered'
+                    if (sharedPreferences.getIsReleasedTriggered().equals("Released")) {
+                        // Set 'DeviceStatus' text to 'triggered'
+                        tempLayout.setIsTriggeredReleasedStatusText("Triggered");
+                        tempLayout.setIsTriggeredReleasedStatusTextColor(R.color.green); // Set text color
+                        // And publish to device that its on 'triggered' state
+                        handleMQTT.publishMessage(tmpTopic, "1", AppConfig.NOT_RETAINED_MESSAGE);
+
+                        // Once published, save the published state to shared preferences
+                        // Mark that we sent 'Triggered'
+                        sharedPreferences.setIsReleasedTriggered("Triggered");
+                    } else {
                         // Set 'DeviceStatus' text to 'released'
                         tempLayout.setIsTriggeredReleasedStatusText("Released");
                         tempLayout.setIsTriggeredReleasedStatusTextColor(R.color.red); // Set text color
-                        // And publish to device that its on 'released' state
+                        // And publish to device that its on 'triggered' state
                         handleMQTT.publishMessage(tmpTopic, "0", AppConfig.NOT_RETAINED_MESSAGE);
 
-                        tmpTopic = topic + "/alarm";
-                        handleMQTT.publishMessage(tmpTopic, "0", AppConfig.RETAINED_MESSAGE);
+                        // Once published, save the published state to shared preferences
                         // Mark that we sent 'released'
                         sharedPreferences.setIsReleasedTriggered("Released");
-                    } else { // If current 'DeviceStatus' text is NOT set to 'alarm' then
-                        // Set the 'tmpTopic' to
-                        final String tmpTopic = topic + "/set_lock_status";
-                        // If last message sent to device was 'release',
-                        // then now (on button click) it should send 'triggered'
-                        if (sharedPreferences.getIsReleasedTriggered().equals("Released")) {
-                            // Set 'DeviceStatus' text to 'triggered'
-                            tempLayout.setIsTriggeredReleasedStatusText("Triggered");
-                            tempLayout.setIsTriggeredReleasedStatusTextColor(R.color.green); // Set text color
-                            // And publish to device that its on 'triggered' state
-                            handleMQTT.publishMessage(tmpTopic, "1", AppConfig.NOT_RETAINED_MESSAGE);
-
-                            // Once published, save the published state to shared preferences
-                            // Mark that we sent 'Triggered'
-                            sharedPreferences.setIsReleasedTriggered("Triggered");
-                        } else {
-                            // Set 'DeviceStatus' text to 'released'
-                            tempLayout.setIsTriggeredReleasedStatusText("Released");
-                            tempLayout.setIsTriggeredReleasedStatusTextColor(R.color.red); // Set text color
-                            // And publish to device that its on 'triggered' state
-                            handleMQTT.publishMessage(tmpTopic, "0", AppConfig.NOT_RETAINED_MESSAGE);
-
-                            // Once published, save the published state to shared preferences
-                            // Mark that we sent 'released'
-                            sharedPreferences.setIsReleasedTriggered("Released");
-                        }
                     }
                 }
-                else
-                    Toast.makeText(getApplicationContext(),
-                            "Device cannot be used while in 'offline' state",
-                            Toast.LENGTH_SHORT).show();
             }
+            else
+                Toast.makeText(getApplicationContext(),
+                        "Device cannot be used while in 'offline' state",
+                        Toast.LENGTH_SHORT).show();
         });
 
         // Add the configured above layout (magnet layout object) to main layout
@@ -1013,30 +973,24 @@ public class MainActivity extends AppCompatActivity {
         final String topic = deviceMap.get("device_id") + "/" + deviceMap.get("device_type");
 
         // Set the 'Start scheduler button' function
-        tempLayout.startScheduler.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, DateTimePickerActivity.class);
-                // Add the device id and pass it to the scheduler activity
-                intent.putExtra("DEVICE_ID", deviceMap.get("device_id"));
-                intent.putExtra("TOPIC", topic + "/automation");
-                startActivity(intent);
-            }
+        tempLayout.startScheduler.setOnClickListener((View v) -> {
+            Intent intent = new Intent(MainActivity.this, DateTimePickerActivity.class);
+            // Add the device id and pass it to the scheduler activity
+            intent.putExtra("DEVICE_ID", deviceMap.get("device_id"));
+            intent.putExtra("TOPIC", topic + "/automation");
+            startActivity(intent);
         });
 
         // Set the 'Start Temperature config button' function
         // On icon click new activity will start
-        tempLayout.startTemperatureConf.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, DynamicLayoutDistilleryTemperatureSet.class);
-                // Add current 'device id' values, since if returned, main activity
-                // Will need to identify which layout to update
-                intent.putExtra("DEVICE_ID", deviceMap.get("device_id"));
-                // startActivityForResult is executed, since this activity will return
-                // A flag whether the user selected manual configurations
-                startActivityForResult(intent, GET_DYNAMIC_LAYOUT_SPECIAL_TEMP_CONF_REQUEST, null);
-            }
+        tempLayout.startTemperatureConf.setOnClickListener((View v) -> {
+            Intent intent = new Intent(MainActivity.this, DynamicLayoutDistilleryTemperatureSet.class);
+            // Add current 'device id' values, since if returned, main activity
+            // Will need to identify which layout to update
+            intent.putExtra("DEVICE_ID", deviceMap.get("device_id"));
+            // startActivityForResult is executed, since this activity will return
+            // A flag whether the user selected manual configurations
+            startActivityForResult(intent, GET_DYNAMIC_LAYOUT_SPECIAL_TEMP_CONF_REQUEST, null);
         });
 
         if(sharedPreferences.getIsCustomTempConfigured())
@@ -1044,39 +998,30 @@ public class MainActivity extends AppCompatActivity {
         else
             tempLayout.setTemperatureConfStatusIcon(R.drawable.x_24);
 
-        tempLayout.tempIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(sharedPreferences.getAutomationError()) {
-                    tempLayout.setTemperatureIcon(R.drawable.temperature_icon_32);
-                    sharedPreferences.setAutomationError(false);
-                    tempLayout.getDistilleryToggleButton().setChecked(false);
-                    MqttService.getStaticHandleMQTT().publishMessage(topic + "/automation_error", "0", AppConfig.RETAINED_MESSAGE);
-                }
+        tempLayout.tempIcon.setOnClickListener((View v) -> {
+            if(sharedPreferences.getAutomationError()) {
+                tempLayout.setTemperatureIcon(R.drawable.temperature_icon_32);
+                sharedPreferences.setAutomationError(false);
+                tempLayout.getDistilleryToggleButton().setChecked(false);
+                MqttService.getStaticHandleMQTT().publishMessage(topic + "/automation_error", "0", AppConfig.RETAINED_MESSAGE);
             }
         });
 
         // Show additional device settings options
-        tempLayout.getOptionsIcon().setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (tempLayout.getDeviceOptionsLayout().getVisibility() == View.VISIBLE){ // If the manual conf layout made visible
-                    tempLayout.getDeviceOptionsLayout().setVisibility(View.GONE);// Show the layout
-                } else { // If the manual conf layout made invisible
-                    tempLayout.getDeviceOptionsLayout().setVisibility(View.VISIBLE);// Show the layout
-                }
+        tempLayout.getOptionsIcon().setOnClickListener((View v) -> {
+            if (tempLayout.getDeviceOptionsLayout().getVisibility() == View.VISIBLE){ // If the manual conf layout made visible
+                tempLayout.getDeviceOptionsLayout().setVisibility(View.GONE);// Show the layout
+            } else { // If the manual conf layout made invisible
+                tempLayout.getDeviceOptionsLayout().setVisibility(View.VISIBLE);// Show the layout
             }
         });
 
         // Remove device from application
-        tempLayout.getRemoveIcon().setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                removeDeviceAlert(deviceMap.get("device_id"));
-            }
-        });
+        tempLayout.getRemoveIcon().setOnClickListener((View v) -> removeDeviceAlert(deviceMap.get("device_id")));
 
         // Set the 'Automation toggle button'
-        tempLayout.getDistilleryToggleButton().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        tempLayout.getDistilleryToggleButton().setOnCheckedChangeListener((CompoundButton buttonView, boolean isChecked) -> {
+
                 // If device id in offline state, no action should be available
                 if (tempLayout.isDeviceOnline()) {
                     String message = sharedPreferences.getCustomTempValues(); // Set local string to hold the temperature values
@@ -1108,7 +1053,7 @@ public class MainActivity extends AppCompatActivity {
                     if (isChecked)
                         tempLayout.setDistilleryToggleButton(false);
                     }
-            }
+
         });
 
         mainLayout.addView(tempLayout.getView());
@@ -1132,10 +1077,8 @@ public class MainActivity extends AppCompatActivity {
         String tag_activation_req = "req_update_customer_device_token";
         final SharedPreferences sharedPreferences = new SharedPreferences(getApplicationContext());
         JsonObjectRequest strReq = new JsonObjectRequest(Request.Method.POST,
-                AppConfig.URL_UPDATE_DEVICE_PASS, new JSONObject(), new Response.Listener<JSONObject>() {
+                AppConfig.URL_UPDATE_DEVICE_PASS, new JSONObject(), (JSONObject response) -> {
 
-            @Override
-            public void onResponse(JSONObject response) {
                 Message hideDialog =
                         uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
 
@@ -1160,11 +1103,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Server Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
                 hideDialog.sendToTarget();
-            }
-        }, new Response.ErrorListener() {
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
+        }, (VolleyError error) -> {
                 Message hideDialog =
                         uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
                 Log.e(TAG, "onErrorResponse is: " + error);
@@ -1175,16 +1115,17 @@ public class MainActivity extends AppCompatActivity {
                     String body;
                     if (error.networkResponse.data != null) {
                         try {
-                            body = new String(error.networkResponse.data, "UTF-8");
+
+                            body = new String(error.networkResponse.data, StandardCharsets.UTF_8);
                             Log.e(TAG, "updateCustomerDeviceWithToken Error: " + body);
                             Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
-                        } catch (UnsupportedEncodingException e) {
+                        } catch (Exception e) {
                             Log.e(TAG, e.toString());
                         }
                     }
                 }
                 hideDialog.sendToTarget();
-            }
+
 
         }) {
             @Override

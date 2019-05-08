@@ -8,19 +8,17 @@ import android.util.Log;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
 
 /**
  * Created by Arie on 3/8/2017.
- *
  */
 
 public class Functions {
@@ -62,9 +60,9 @@ public class Functions {
     }
 
     public static boolean isAlphanumeric(String str) {
-        for (int i=0; i<str.length(); i++) {
+        for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
-            if (!Character.isDigit(c) && !Character.isLetter(c) && c!=' ')
+            if (!Character.isDigit(c) && !Character.isLetter(c) && c != ' ')
                 return false;
         }
         return true;
@@ -78,7 +76,7 @@ public class Functions {
      * @return True if input string contains alphabet characters only or False if not
      */
     public static boolean isAlphabet(String value) {
-        for (int i=0; i<value.length(); i++) {
+        for (int i = 0; i < value.length(); i++) {
             char c = value.charAt(i);
             if (!Character.isLetter(c))
                 return false;
@@ -116,34 +114,25 @@ public class Functions {
 
         // Start new StringRequest (HTTP)
         StringRequest strReq = new StringRequest(Request.Method.POST,
-                AppConfig.URL_REVOKE_TOKEN, new Response.Listener<String>() {
+                AppConfig.URL_REVOKE_TOKEN, (String response) -> {
+            // Just log the response with no action
+            Log.d(TAG, "Revoke Token Response: " + response);
+        }, (VolleyError error) -> {
+            if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                Log.e(TAG, "Server Time out error or no connection");
+            } else {
 
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "Revoke Token Response: " + response);
-
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                if(error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Log.e(TAG, "Server Time out error or no connection");
-                } else {
-
-                    String body;
-                    //get status code here
-                    String statusCode = String.valueOf(error.networkResponse.statusCode);
-                    Log.e(TAG, "Server response code: " + statusCode);
-                    //get response body and parse with appropriate encoding
-                    if (error.networkResponse.data != null) {
-                        try {
-                            body = new String(error.networkResponse.data, "UTF-8");
-                            Log.e(TAG, "Login Error: " + body);
-                        } catch (UnsupportedEncodingException e) {
-                            Log.e(TAG, e.toString());
-                        }
+                String body;
+                //get status code here
+                String statusCode = String.valueOf(error.networkResponse.statusCode);
+                Log.e(TAG, "Server response code: " + statusCode);
+                //get response body and parse with appropriate encoding
+                if (error.networkResponse.data != null) {
+                    try {
+                        body = new String(error.networkResponse.data, StandardCharsets.UTF_8);
+                        Log.e(TAG, "Login Error: " + body);
+                    } catch (Exception e) {
+                        Log.e(TAG, e.toString());
                     }
                 }
             }

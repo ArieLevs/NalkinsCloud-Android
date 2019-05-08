@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -25,7 +24,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,8 +40,6 @@ import cloud.nalkins.nalkinscloud.SharedPreferences;
 
 /**
  * Created by Arie on 3/19/2017.
- *
- *
  */
 public class DeviceConfigurationHandler extends AppCompatActivity {
     private static final String TAG = DeviceConfigurationHandler.class.getSimpleName();
@@ -93,30 +90,26 @@ public class DeviceConfigurationHandler extends AppCompatActivity {
         // session manager
         session = new SharedPreferences(getApplicationContext());
 
-        TextView deviceName = (TextView) findViewById(R.id.device_name_set);
-        TextView wifiSSIDSelected = (TextView) findViewById(R.id.device_config_ssid_set);
-        TextView wifiPassSelected = (TextView) findViewById(R.id.device_config_pass_set);
+        TextView deviceName = findViewById(R.id.device_name_set);
+        TextView wifiSSIDSelected = findViewById(R.id.device_config_ssid_set);
+        TextView wifiPassSelected = findViewById(R.id.device_config_pass_set);
 
         deviceName.setText(DeviceSetNameActivity.getDeviceName());
         wifiSSIDSelected.setText(GetWifiCredentialsActivity.getSelectedSSID());
         wifiPassSelected.setText(GetWifiCredentialsActivity.getSelectedPassword());
 
         //Set next button
-        Button confirmButton = (Button) findViewById(R.id.confirmButton);
+        Button confirmButton = findViewById(R.id.confirmButton);
 
         // Login button function
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // If device has network connection
-                if (HandleWifiConnection.isNetworkConnected(getApplicationContext()) != 0) {
+        confirmButton.setOnClickListener((View v) -> {
+            // If device has network connection
+            if (HandleWifiConnection.isNetworkConnected(getApplicationContext()) != 0) {
 
-                    // Get new password for the device from server, and sent server the device name to pair
-                    getDevicePasswordFromServer(DeviceAddNewActivity.getDeviceId());
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "No network connection detected", Toast.LENGTH_LONG).show();
-                }
+                // Get new password for the device from server, and sent server the device name to pair
+                getDevicePasswordFromServer(DeviceAddNewActivity.getDeviceId());
+            } else {
+                Toast.makeText(getApplicationContext(), "No network connection detected", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -140,64 +133,57 @@ public class DeviceConfigurationHandler extends AppCompatActivity {
         params.put("device_id", device_id); // Scanned QR code
 
         JsonObjectRequest strReq = new JsonObjectRequest(Request.Method.POST,
-            AppConfig.URL_GET_DEVICE_PASS, new JSONObject(params), new Response.Listener<JSONObject>() {
+                AppConfig.URL_GET_DEVICE_PASS, new JSONObject(params), (JSONObject response) -> {
 
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.d(TAG, "Password Response: " + response.toString());
-                Message hideDialog = uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
-                try {
-                    // Check if the token contains any values
-                    if (response.getString("status").equals("success")) {
-                        Log.d(TAG, "New Device password confirmed");
-                        devicePassword = response.getString("message");
-                        // When password received move to device configuration
-                        // Send response message to next function
+            Log.d(TAG, "Password Response: " + response.toString());
+            Message hideDialog = uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
+            try {
+                // Check if the token contains any values
+                if (response.getString("status").equals("success")) {
+                    Log.d(TAG, "New Device password confirmed");
+                    devicePassword = response.getString("message");
+                    // When password received move to device configuration
+                    // Send response message to next function
 
-                        testDeviceMqttConnection();
-                    } else {
-                        // Send hide dialog box to UI Thread
-                        hideDialog.sendToTarget();
-                        // Error in password request. Get the error message
-                        String errorMsg = response.getString("message");
-                        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
-                    }
-                } catch (JSONException e) {
+                    testDeviceMqttConnection();
+                } else {
                     // Send hide dialog box to UI Thread
                     hideDialog.sendToTarget();
-                    // JSON error
-                    Log.d(TAG, "Json error: " + e.toString());
-                    Toast.makeText(getApplicationContext(), "GetDevicePass Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    // Error in password request. Get the error message
+                    String errorMsg = response.getString("message");
+                    Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
                 }
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Functions.hideDialog(pDialog);
+            } catch (JSONException e) {
                 // Send hide dialog box to UI Thread
-                Message hideDialog = uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
                 hideDialog.sendToTarget();
-                if(error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Log.e(TAG, "Server Time out error or no connection");
-                    Toast.makeText(getApplicationContext(),
-                            "Timeout error! Server is not responding for password request",
-                            Toast.LENGTH_LONG).show();
-                } else {
-                    String body;
-                    //get status code here
-                    String statusCode = String.valueOf(error.networkResponse.statusCode);
-                    Log.e(TAG, "Server response code: " + statusCode);
-                    Toast.makeText(getApplicationContext(), statusCode, Toast.LENGTH_LONG).show();
-                    //get response body and parse with appropriate encoding
-                    if (error.networkResponse.data != null) {
-                        try {
-                            body = new String(error.networkResponse.data, "UTF-8");
-                            Log.e(TAG, "Device pass error: " + body);
-                            Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
-                        } catch (UnsupportedEncodingException e) {
-                            Log.e(TAG, e.toString());
-                        }
+                // JSON error
+                Log.d(TAG, "Json error: " + e.toString());
+                Toast.makeText(getApplicationContext(), "GetDevicePass Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }, (VolleyError error) -> {
+            Functions.hideDialog(pDialog);
+            // Send hide dialog box to UI Thread
+            Message hideDialog = uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
+            hideDialog.sendToTarget();
+            if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                Log.e(TAG, "Server Time out error or no connection");
+                Toast.makeText(getApplicationContext(),
+                        "Timeout error! Server is not responding for password request",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                String body;
+                //get status code here
+                String statusCode = String.valueOf(error.networkResponse.statusCode);
+                Log.e(TAG, "Server response code: " + statusCode);
+                Toast.makeText(getApplicationContext(), statusCode, Toast.LENGTH_LONG).show();
+                //get response body and parse with appropriate encoding
+                if (error.networkResponse.data != null) {
+                    try {
+                        body = new String(error.networkResponse.data, StandardCharsets.UTF_8);
+                        Log.e(TAG, "Device pass error: " + body);
+                        Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        Log.e(TAG, e.toString());
                     }
                 }
             }
@@ -248,7 +234,7 @@ public class DeviceConfigurationHandler extends AppCompatActivity {
                     handleMQTT.disconnectMQTTClient();
                     Log.d(TAG, "Device simulation passed successfully");
                     connectToDevice(GetWifiCredentialsActivity.getSelectedSSID(),
-                           GetWifiCredentialsActivity.getSelectedPassword(),
+                            GetWifiCredentialsActivity.getSelectedPassword(),
                             devicePassword);
 
                 } catch (Exception e) {
@@ -264,13 +250,13 @@ public class DeviceConfigurationHandler extends AppCompatActivity {
 
     /**
      * Function will execute a network connection to the device
-     *
+     * <p>
      * All below parameters are moving to a next function called 'configureDevice'
-     * @see DeviceConfigurationHandler#configureDevice(String, String, String)
      *
-     * @param local_ssid local SSID the device should use for communication
+     * @param local_ssid      local SSID the device should use for communication
      * @param local_wifi_pass local wireless LAN password the device should use to connect to SSID
-     * @param device_pass the password the device should authenticate himself to mqtt server
+     * @param device_pass     the password the device should authenticate himself to mqtt server
+     * @see DeviceConfigurationHandler #configureDevice(String, String, String)
      */
     public void connectToDevice(final String local_ssid, final String local_wifi_pass, final String device_pass) {
         Log.d(TAG, "Starting 'connectToDeviceAP'");
@@ -333,9 +319,9 @@ public class DeviceConfigurationHandler extends AppCompatActivity {
     /**
      * Start HTTP session with the MQTT device and send it its password, wifiSSID and wifiPASS
      *
-     * @param local_ssid local SSID the device should use for communication
+     * @param local_ssid      local SSID the device should use for communication
      * @param local_wifi_pass local wireless LAN password the device should use to connect to SSID
-     * @param device_pass the password the device should authenticate himself to mqtt server
+     * @param device_pass     the password the device should authenticate himself to mqtt server
      */
     public void configureDevice(String local_ssid, String local_wifi_pass, String device_pass) {
         Log.d(TAG, "Starting 'configureDevice' function");
@@ -358,74 +344,67 @@ public class DeviceConfigurationHandler extends AppCompatActivity {
         params.put("device_pass", device_pass);
 
         JsonObjectRequest strReq = new JsonObjectRequest(Request.Method.POST,
-                AppConfig.DEVICE_SETUP, new JSONObject(params), new Response.Listener<JSONObject>() {
+                AppConfig.DEVICE_SETUP, new JSONObject(params), (JSONObject response) -> {
 
-            @Override
-            public void onResponse(JSONObject response) {
-                Message hideDialog = uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
+            Message hideDialog = uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
 
-                // Function will stop connection to device AP
-                Functions.stopWifiConnectionProcedure(getApplication());
-                Log.d(TAG, "Device Response: " + response.toString());
-                try {
-                    String status = response.getString("status");
-                    // Check if the token contains any values
-                    if (status.equals("success")) {
-                        Log.d(TAG, "Device wifi connection check passed");
+            // Function will stop connection to device AP
+            Functions.stopWifiConnectionProcedure(getApplication());
+            Log.d(TAG, "Device Response: " + response.toString());
+            try {
+                String status = response.getString("status");
+                // Check if the token contains any values
+                if (status.equals("success")) {
+                    Log.d(TAG, "Device wifi connection check passed");
 
-                        while(!HandleWifiConnection.isOnline(getApplicationContext())) {
-                            try {
-                                Thread.sleep(1000);
-                            }
-                            catch (InterruptedException e) {
-                                Log.e(TAG, e.toString());
-                            }
-                        }
-                        activateDeviceOnServer(DeviceAddNewActivity.getDeviceId(), DeviceSetNameActivity.getDeviceName());
-                    } else {
-                        // Send hide dialog box to UI Thread
-                        hideDialog.sendToTarget();
-                        // Error in configuration. Get the error message
-                        Log.d(TAG, response.getString("message"));
-                        Toast.makeText(getApplicationContext(), response.getString("message") + ", Probably wrong password", Toast.LENGTH_LONG).show();
-                        // Take user back to Wifi configuration activity
-                        Intent intent = new Intent(DeviceConfigurationHandler.this, GetWifiCredentialsActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-
-                    }
-                } catch (JSONException e) {
-                    // Send hide dialog box to UI Thread
-                    hideDialog.sendToTarget();
-                    // JSON error
-                    Log.d(TAG, "Json error: " + e.toString());
-                    Toast.makeText(getApplicationContext(), "Device Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Message hideDialog = uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
-                // Send hide dialog box to UI Thread
-                hideDialog.sendToTarget();
-
-                // Function will stop connection to device AP
-                Functions.stopWifiConnectionProcedure(getApplication());
-                Log.e(TAG, "onErrorResponse is: " + error);
-                if(error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Log.e(TAG, "Device Time out error or no connection");
-                    Toast.makeText(getApplicationContext(), "Timeout error! Device is not responding", Toast.LENGTH_LONG).show();
-                } else {
-                    String body;
-                    if (error.networkResponse.data != null) {
+                    while (!HandleWifiConnection.isOnline(getApplicationContext())) {
                         try {
-                            body = new String(error.networkResponse.data, "UTF-8");
-                            Log.e(TAG, "Activation Error: " + body);
-                            Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
-                        } catch (UnsupportedEncodingException e) {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
                             Log.e(TAG, e.toString());
                         }
+                    }
+                    activateDeviceOnServer(DeviceAddNewActivity.getDeviceId(), DeviceSetNameActivity.getDeviceName());
+                } else {
+                    // Send hide dialog box to UI Thread
+                    hideDialog.sendToTarget();
+                    // Error in configuration. Get the error message
+                    Log.d(TAG, response.getString("message"));
+                    Toast.makeText(getApplicationContext(), response.getString("message") + ", Probably wrong password", Toast.LENGTH_LONG).show();
+                    // Take user back to Wifi configuration activity
+                    Intent intent = new Intent(DeviceConfigurationHandler.this, GetWifiCredentialsActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+
+                }
+            } catch (JSONException e) {
+                // Send hide dialog box to UI Thread
+                hideDialog.sendToTarget();
+                // JSON error
+                Log.d(TAG, "Json error: " + e.toString());
+                Toast.makeText(getApplicationContext(), "Device Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+
+        }, (VolleyError error) -> {
+            Message hideDialog = uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
+            // Send hide dialog box to UI Thread
+            hideDialog.sendToTarget();
+
+            // Function will stop connection to device AP
+            Functions.stopWifiConnectionProcedure(getApplication());
+            Log.e(TAG, "onErrorResponse is: " + error);
+            if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                Log.e(TAG, "Device Time out error or no connection");
+                Toast.makeText(getApplicationContext(), "Timeout error! Device is not responding", Toast.LENGTH_LONG).show();
+            } else {
+                String body;
+                if (error.networkResponse.data != null) {
+                    try {
+                        body = new String(error.networkResponse.data, StandardCharsets.UTF_8);
+                        Log.e(TAG, "Activation Error: " + body);
+                        Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        Log.e(TAG, e.toString());
                     }
                 }
             }
@@ -449,68 +428,60 @@ public class DeviceConfigurationHandler extends AppCompatActivity {
         params.put("device_name", device_name); // The device name, user choose
 
         JsonObjectRequest strReq = new JsonObjectRequest(Request.Method.POST,
-                AppConfig.URL_ACTIVATION, new JSONObject(params), new Response.Listener<JSONObject>() {
+                AppConfig.URL_ACTIVATION, new JSONObject(params), (JSONObject response) -> {
 
-            @Override
-            public void onResponse(JSONObject response) {
-                Message hideDialog = uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
-                // Send hide dialog box to UI Thread
-                hideDialog.sendToTarget();
+            Message hideDialog = uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
+            // Send hide dialog box to UI Thread
+            hideDialog.sendToTarget();
 
-                Log.d(TAG, "Server Response: " + response.toString());
-                try {
-                    // Check if the token contains any values
-                    if (response.getString("status").equals("success")) {
-                        Log.d(TAG, "Device Successfully activated");
+            Log.d(TAG, "Server Response: " + response.toString());
+            try {
+                // Check if the token contains any values
+                if (response.getString("status").equals("success")) {
+                    Log.d(TAG, "Device Successfully activated");
 
-                        Toast.makeText(getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
-                        Toast.makeText(getApplicationContext(), "Activation successfully completed", Toast.LENGTH_LONG).show();
-                        // Launch main activity
-                        Intent intent = new Intent(DeviceConfigurationHandler.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Close all previous activities
-                        startActivity(intent);
-                        finish();
+                    Toast.makeText(getApplicationContext(), response.getString("message"), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Activation successfully completed", Toast.LENGTH_LONG).show();
+                    // Launch main activity
+                    Intent intent = new Intent(DeviceConfigurationHandler.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Close all previous activities
+                    startActivity(intent);
+                    finish();
 
-                    } else {
-                        // Error in password request. Get the error message
-                        String errorMsg = response.getString("message");
-                        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
-                    }
-                } catch (JSONException e) {
-                    // JSON error
-                    Log.d(TAG, "Json error: " + e.toString());
-                    Toast.makeText(getApplicationContext(), "Activate Device  Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Message hideDialog = uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
-                // Send hide dialog box to UI Thread
-                hideDialog.sendToTarget();
-
-                if(error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Log.e(TAG, "Server Time out error or no connection");
-                    Toast.makeText(getApplicationContext(),
-                            "Timeout error! Server is not responding for password request",
-                            Toast.LENGTH_LONG).show();
                 } else {
-                    String body;
-                    //get status code here
-                    String statusCode = String.valueOf(error.networkResponse.statusCode);
-                    Log.e(TAG, "Server response code: " + statusCode);
-                    Toast.makeText(getApplicationContext(), statusCode, Toast.LENGTH_LONG).show();
-                    //get response body and parse with appropriate encoding
-                    if (error.networkResponse.data != null) {
-                        try {
-                            body = new String(error.networkResponse.data, "UTF-8");
-                            Log.e(TAG, "Device activation error: " + body);
-                            Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
-                        } catch (UnsupportedEncodingException e) {
-                            Log.e(TAG, e.toString());
-                        }
+                    // Error in password request. Get the error message
+                    String errorMsg = response.getString("message");
+                    Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
+                }
+            } catch (JSONException e) {
+                // JSON error
+                Log.d(TAG, "Json error: " + e.toString());
+                Toast.makeText(getApplicationContext(), "Activate Device  Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }, (VolleyError error) -> {
+            Message hideDialog = uiHandler.obtainMessage(HIDE_DIALOG, pDialog);
+            // Send hide dialog box to UI Thread
+            hideDialog.sendToTarget();
+
+            if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                Log.e(TAG, "Server Time out error or no connection");
+                Toast.makeText(getApplicationContext(),
+                        "Timeout error! Server is not responding for password request",
+                        Toast.LENGTH_LONG).show();
+            } else {
+                String body;
+                //get status code here
+                String statusCode = String.valueOf(error.networkResponse.statusCode);
+                Log.e(TAG, "Server response code: " + statusCode);
+                Toast.makeText(getApplicationContext(), statusCode, Toast.LENGTH_LONG).show();
+                //get response body and parse with appropriate encoding
+                if (error.networkResponse.data != null) {
+                    try {
+                        body = new String(error.networkResponse.data, StandardCharsets.UTF_8);
+                        Log.e(TAG, "Device activation error: " + body);
+                        Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        Log.e(TAG, e.toString());
                     }
                 }
             }

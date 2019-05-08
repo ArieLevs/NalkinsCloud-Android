@@ -23,7 +23,6 @@ import cloud.nalkins.nalkinscloud.SharedPreferences;
 
 /**
  * Created by Arie on 5/9/2017.
- *
  */
 
 public class DynamicLayoutDistilleryTemperatureSet extends AppCompatActivity {
@@ -84,50 +83,56 @@ public class DynamicLayoutDistilleryTemperatureSet extends AppCompatActivity {
 
         setupSpinners();
 
-        Button confirmButton = (Button) findViewById(R.id.confirmButton);
-        Button defaultButton = (Button) findViewById(R.id.defaultButton);
+        Button confirmButton = findViewById(R.id.confirmButton);
+        Button defaultButton = findViewById(R.id.defaultButton);
 
         // Set 'Confirm' button on click action
         // Once button is clicked all selected values from spinners will get saved
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Send message to UI at MainActivity
-                Bundle extras = getIntent().getExtras();
-                Message msg = MainActivity.uiHandler.obtainMessage();
-                msg.what = UPDATE_DEVICE_UI;
+        confirmButton.setOnClickListener((View v) -> {
+            // Send message to UI at MainActivity
+            Message msg = MainActivity.uiHandler.obtainMessage();
+            msg.what = UPDATE_DEVICE_UI;
+            Bundle extras = getIntent().getExtras();
+            if (extras != null) {
                 msg.obj = "{\"topic\":\"" + extras.getString("DEVICE_ID") + "/distillery/update_temp_settings" + "\"," +
                         "\"message\": \"" + 1 + "\"}";
-                MainActivity.uiHandler.sendMessage(msg);
-
-                sharedPreferences.setIsCustomTempConfigured(true);
-                // Save temperature configured values
-                sharedPreferences.setCustomTempValues(tempArray);
-                finish();
+            } else {
+                Log.e(TAG, "Error - extras (Bundle) is null");
+                msg.obj = "{\"topic\":\"error\"," +
+                        "\"message\": \"extras (Bundle) is null\"}";
             }
+            MainActivity.uiHandler.sendMessage(msg);
+
+            sharedPreferences.setIsCustomTempConfigured(true);
+            // Save temperature configured values
+            sharedPreferences.setCustomTempValues(tempArray);
+            finish();
         });
 
         // Set 'default' button on click action
         // Once button clicked, default values will be copied to 'temperatureValuesArray'
-        defaultButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // { "main heater", "disposal ssr1", "disposal ssr2", "secondary ssr", "cooler ssr" }
-                int[] originalArrayValues = {94, 60, 80, 80};
+        defaultButton.setOnClickListener((View v) -> {
+            // { "main heater", "disposal ssr1", "disposal ssr2", "secondary ssr", "cooler ssr" }
+            int[] originalArrayValues = {94, 60, 80, 80};
+            // Send message to UI at MainActivity
+            Message msg = MainActivity.uiHandler.obtainMessage();
+            msg.what = UPDATE_DEVICE_UI;
 
-                // Send message to UI at MainActivity
-                Bundle extras = getIntent().getExtras();
-                Message msg = MainActivity.uiHandler.obtainMessage();
-                msg.what = UPDATE_DEVICE_UI;
+            Bundle extras = getIntent().getExtras();
+            if (extras != null) {
                 msg.obj = "{\"topic\":\"" + extras.getString("DEVICE_ID") + "/distillery/update_temp_settings" + "\"," +
                         "\"message\": \"" + 0 + "\"}";
-                MainActivity.uiHandler.sendMessage(msg);
-
-                sharedPreferences.setIsCustomTempConfigured(false);
-                // Save temperature configured values
-                sharedPreferences.setCustomTempValues(originalArrayValues);
-                finish();
+            } else {
+                Log.e(TAG, "Error - extras (Bundle) is null");
+                msg.obj = "{\"topic\":\"error\"," +
+                        "\"message\": \"extras (Bundle) is null\"}";
             }
+            MainActivity.uiHandler.sendMessage(msg);
+
+            sharedPreferences.setIsCustomTempConfigured(false);
+            // Save temperature configured values
+            sharedPreferences.setCustomTempValues(originalArrayValues);
+            finish();
         });
     }
 
@@ -136,7 +141,7 @@ public class DynamicLayoutDistilleryTemperatureSet extends AppCompatActivity {
         Log.d(TAG, "Running 'setupSpinners' function");
         // Declare Spinner value array (degrees from 50 to 100 C)
         arraySpinner = new String[101];
-        for(int i=0; i <= 100; i++) {
+        for (int i = 0; i <= 100; i++) {
             this.arraySpinner[i] = String.valueOf(i);
         }
 
@@ -145,7 +150,7 @@ public class DynamicLayoutDistilleryTemperatureSet extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         // Declare Main Heater spinner array
-        spinnerMainHeaterSSR = (Spinner) findViewById(R.id.spinner_main_heater);
+        spinnerMainHeaterSSR = findViewById(R.id.spinner_main_heater);
         spinnerMainHeaterSSR.setAdapter(adapter);
         spinnerMainHeaterSSR.setSelection(tempArray[0]); // This is default value of '84'
         spinnerMainHeaterSSR.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -153,16 +158,17 @@ public class DynamicLayoutDistilleryTemperatureSet extends AppCompatActivity {
                 try {
                     // Set value to relevant array cell
                     tempArray[0] = pos;
-                } catch(NumberFormatException nfe) {
+                } catch (NumberFormatException nfe) {
                     System.out.println("Could not parse " + nfe);
                 }
             }
+
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 
         // Declare first disposal spinner array
-        spinnerWaterCoolerSSR1 = (Spinner) findViewById(R.id.spinner_water_cooler);
+        spinnerWaterCoolerSSR1 = findViewById(R.id.spinner_water_cooler);
         spinnerWaterCoolerSSR1.setAdapter(adapter);
         spinnerWaterCoolerSSR1.setSelection(tempArray[1]); // This is default value of '84'
         spinnerWaterCoolerSSR1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -171,17 +177,18 @@ public class DynamicLayoutDistilleryTemperatureSet extends AppCompatActivity {
                 try {
                     // Set value to relevant array cell, from 'pos' (position of spinner)
                     tempArray[1] = pos;
-                } catch(NumberFormatException nfe) {
+                } catch (NumberFormatException nfe) {
                     System.out.println("Could not parse " + nfe);
                 }
             }
+
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
 
         // Declare secondary spinner array
-        spinnerAirCoolerSSR2 = (Spinner) findViewById(R.id.spinner_air_cooler_ssr);
+        spinnerAirCoolerSSR2 = findViewById(R.id.spinner_air_cooler_ssr);
         spinnerAirCoolerSSR2.setAdapter(adapter);
         spinnerAirCoolerSSR2.setSelection(tempArray[2]); // This is default value of '84'
         spinnerAirCoolerSSR2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -190,17 +197,18 @@ public class DynamicLayoutDistilleryTemperatureSet extends AppCompatActivity {
                 try {
                     // Set value to relevant array cell
                     tempArray[2] = pos;
-                } catch(NumberFormatException nfe) {
+                } catch (NumberFormatException nfe) {
                     System.out.println("Could not parse " + nfe);
                 }
             }
+
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
 
         // Declare To Barrel spinner array
-        spinnerToBarrelDisposalSSR = (Spinner) findViewById(R.id.spinner_to_barrel_ssr);
+        spinnerToBarrelDisposalSSR = findViewById(R.id.spinner_to_barrel_ssr);
         spinnerToBarrelDisposalSSR.setAdapter(adapter);
         spinnerToBarrelDisposalSSR.setSelection(tempArray[3]); // This is default value of '84'
         spinnerToBarrelDisposalSSR.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -210,10 +218,11 @@ public class DynamicLayoutDistilleryTemperatureSet extends AppCompatActivity {
                     // Set value to relevant array cell
                     //temperatureValuesArray[4] = parent.getItemAtPosition(pos).toString();
                     tempArray[3] = pos;
-                } catch(NumberFormatException nfe) {
+                } catch (NumberFormatException nfe) {
                     System.out.println("Could not parse " + nfe);
                 }
             }
+
             public void onNothingSelected(AdapterView<?> parent) {
 
             }

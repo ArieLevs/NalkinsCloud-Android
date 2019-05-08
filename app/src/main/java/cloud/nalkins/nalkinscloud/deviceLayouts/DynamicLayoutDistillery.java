@@ -61,34 +61,32 @@ public class DynamicLayoutDistillery {
         LayoutInflater inflater = LayoutInflater.from(context);
         this.v = inflater.inflate(R.layout.distillery_layout, null);
 
-        this.deviceOptionsLayout = (LinearLayout) v.findViewById(R.id.settingsLayout);
+        this.deviceOptionsLayout = v.findViewById(R.id.settingsLayout);
 
-        this.deviceNameText = (TextView) v.findViewById(R.id.device_name_text_view);
+        this.deviceNameText = v.findViewById(R.id.device_name_text_view);
         deviceNameText.setText(deviceName);
 
-        this.deviceStatus = (TextView) v.findViewById(R.id.device_status); // Set 'online' \ 'offline' status
+        this.deviceStatus = v.findViewById(R.id.device_status); // Set 'online' \ 'offline' status
 
         // Initialize start scheduler button
-        this.startScheduler = (ImageView) v.findViewById(R.id.scheduler_start_icon);
+        this.startScheduler = v.findViewById(R.id.scheduler_start_icon);
         // Initialize set scheduler status icon
-        this.statusScheduler = (ImageView) v.findViewById(R.id.scheduler_set_icon);
+        this.statusScheduler = v.findViewById(R.id.scheduler_set_icon);
 
         // Initialize start startTemperatureConf button
-        this.startTemperatureConf = (ImageView) v.findViewById(R.id.temp_start_icon);
+        this.startTemperatureConf = v.findViewById(R.id.temp_start_icon);
         // Initialize start StatusTemperatureConf button
-        this.statusTemperatureConf = (ImageView) v.findViewById(R.id.temp_set_icon);
+        this.statusTemperatureConf = v.findViewById(R.id.temp_set_icon);
 
-        this.deviceOptionsIcon = (ImageView) v.findViewById(R.id.device_options); // Define and set the layouts side icon
-
-        this.deviceRemoveIcon = (ImageView) v.findViewById(R.id.device_remove_icon); // Define and set the layouts side icon
+        this.deviceOptionsIcon = v.findViewById(R.id.device_options); // Define and set the layouts side icon
+        this.deviceRemoveIcon = v.findViewById(R.id.device_remove_icon); // Define and set the layouts side icon
 
         // Initialize the layouts main toggle button
-        this.toggle = (ToggleButton) v.findViewById(R.id.distillery_toggle_button);
+        this.toggle = v.findViewById(R.id.distillery_toggle_button);
 
-
-        this.tempIcon = (ImageView) v.findViewById(R.id.temp_icon);
-        this.temp_status_text_view = (TextView) v.findViewById(R.id.temp_status_text_view);
-        this.temperature = (TextView) v.findViewById(R.id.device_temp_var);
+        this.tempIcon = v.findViewById(R.id.temp_icon);
+        this.temp_status_text_view = v.findViewById(R.id.temp_status_text_view);
+        this.temperature = v.findViewById(R.id.device_temp_var);
     }
 
     public void setStatusValue(String value) {
