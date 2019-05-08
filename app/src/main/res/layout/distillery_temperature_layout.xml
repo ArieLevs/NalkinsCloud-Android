@@ -1,21 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.14"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/orgName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/temp_conf"
+            android:textColor="@color/black"
+            android:textSize="30sp" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/main_text"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_weight="0.85"
+            android:layout_weight="1"
             android:gravity="start"
             android:text="Stop Main heater when reach"
             android:textColor="@color/black"
@@ -28,26 +46,22 @@
 
     </LinearLayout>
 
-
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:orientation="horizontal"
-        android:paddingTop="10dp">
+        android:paddingTop="5dp">
 
         <TextView
             android:id="@+id/water_cooler_ssr_text"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_weight="0.85"
+            android:layout_weight="1"
             android:gravity="start"
             android:text="Water cooler SSR starts work when at"
             android:textColor="@color/black"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <Spinner
             android:id="@+id/spinner_water_cooler"
@@ -56,8 +70,6 @@
 
 
     </LinearLayout>
-
-
 
 
     <LinearLayout
@@ -110,42 +122,49 @@
 
     </LinearLayout>
 
-
-
-
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:gravity="center|bottom"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="20dp">
 
-        <Button
-            android:id="@+id/confirmButton"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="4dp"
-            android:background="@color/light_blue"
-            android:text="@string/btn_confirm" />
+            android:gravity="center"
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/confirmButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="4dp"
+                android:background="@color/light_blue"
+                android:text="@string/btn_confirm" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/defaultButton"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="4dp"
-            android:background="@color/light_blue"
-            android:text="@string/btn_set_default" />
+            android:gravity="center"
+            android:orientation="horizontal">
 
+            <Button
+                android:id="@+id/defaultButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="4dp"
+                android:background="@color/light_blue"
+                android:text="@string/btn_set_default" />
+
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

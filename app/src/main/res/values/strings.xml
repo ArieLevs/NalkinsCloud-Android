@@ -135,6 +135,7 @@
     <string name="components_status">Components Status:</string>
     <string name="uptime">Uptime:</string>
     <string name="main_heater_name">Main Heater</string>
+    <string name="temp_conf">Temperature Configuration</string>
 
 
 </resources>
