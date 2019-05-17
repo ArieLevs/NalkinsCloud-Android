@@ -898,8 +898,6 @@ public class MainActivity extends AppCompatActivity {
 
         final String topic = deviceMap.get("device_id") + "/" + deviceMap.get("device_type");
 
-        final MqttClient handleMQTT = MqttService.getStaticHandleMQTT(); // Get mqtt client object
-
         // Set 'magnet' layout (the object) icon, and set it as clickable
         tempLayout.getDeviceIcon().setOnClickListener((View v) -> {
             // If device id in offline state, no action should be available
@@ -909,7 +907,7 @@ public class MainActivity extends AppCompatActivity {
                     // Set the 'tmpTopic' to
                     String tmpTopic = topic + "/release_alarm";
                     // And publish the message (to release the alarm)
-                    handleMQTT.publishMessage(tmpTopic, "1", AppConfig.NOT_RETAINED_MESSAGE);
+                    MqttService.getStaticHandleMQTT().publishMessage(tmpTopic, "1", AppConfig.NOT_RETAINED_MESSAGE);
                     // Then switch the icon back to "normal" magnet icon
                     tempLayout.setDeviceIcon(R.drawable.magnet_main_64);
 
@@ -920,10 +918,10 @@ public class MainActivity extends AppCompatActivity {
                     tempLayout.setIsTriggeredReleasedStatusText("Released");
                     tempLayout.setIsTriggeredReleasedStatusTextColor(R.color.red); // Set text color
                     // And publish to device that its on 'released' state
-                    handleMQTT.publishMessage(tmpTopic, "0", AppConfig.NOT_RETAINED_MESSAGE);
+                    MqttService.getStaticHandleMQTT().publishMessage(tmpTopic, "0", AppConfig.NOT_RETAINED_MESSAGE);
 
                     tmpTopic = topic + "/alarm";
-                    handleMQTT.publishMessage(tmpTopic, "0", AppConfig.RETAINED_MESSAGE);
+                    MqttService.getStaticHandleMQTT().publishMessage(tmpTopic, "0", AppConfig.RETAINED_MESSAGE);
                     // Mark that we sent 'released'
                     sharedPreferences.setIsReleasedTriggered("Released");
                 } else { // If current 'DeviceStatus' text is NOT set to 'alarm' then
@@ -936,7 +934,7 @@ public class MainActivity extends AppCompatActivity {
                         tempLayout.setIsTriggeredReleasedStatusText("Triggered");
                         tempLayout.setIsTriggeredReleasedStatusTextColor(R.color.green); // Set text color
                         // And publish to device that its on 'triggered' state
-                        handleMQTT.publishMessage(tmpTopic, "1", AppConfig.NOT_RETAINED_MESSAGE);
+                        MqttService.getStaticHandleMQTT().publishMessage(tmpTopic, "1", AppConfig.NOT_RETAINED_MESSAGE);
 
                         // Once published, save the published state to shared preferences
                         // Mark that we sent 'Triggered'
@@ -946,7 +944,8 @@ public class MainActivity extends AppCompatActivity {
                         tempLayout.setIsTriggeredReleasedStatusText("Released");
                         tempLayout.setIsTriggeredReleasedStatusTextColor(R.color.red); // Set text color
                         // And publish to device that its on 'triggered' state
-                        handleMQTT.publishMessage(tmpTopic, "0", AppConfig.NOT_RETAINED_MESSAGE);
+
+                        MqttService.getStaticHandleMQTT().publishMessage(tmpTopic, "0", AppConfig.NOT_RETAINED_MESSAGE);
 
                         // Once published, save the published state to shared preferences
                         // Mark that we sent 'released'
