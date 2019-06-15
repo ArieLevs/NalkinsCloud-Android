@@ -235,39 +235,36 @@ public class DeviceAddNewActivity extends AppCompatActivity {
     // Request Wifi permissions if not granted
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            // Request permissions to use wifi scan (location permissions is needed)
-            case RequestLocationPermissionID: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "Location permission granted");
-                    locationPermFlag = true;
-                    //addNewDevice();
-                } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(DeviceAddNewActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                        Log.d(TAG, "Location permission was not granted");
-                        Toast.makeText(getApplicationContext(), "Location permission must be granted to scan Wifi", Toast.LENGTH_LONG).show();
-                        locationPermFlag = false;
+        // Request permissions to use wifi scan (location permissions is needed)
+        if (requestCode == RequestLocationPermissionID) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "Location permission granted");
+                locationPermFlag = true;
+                //addNewDevice();
+            } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(DeviceAddNewActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    Log.d(TAG, "Location permission was not granted");
+                    Toast.makeText(getApplicationContext(), "Location permission must be granted to scan Wifi", Toast.LENGTH_LONG).show();
+                    locationPermFlag = false;
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(DeviceAddNewActivity.this);
-                        builder.setTitle("Critical permission required")
-                                .setMessage("This permission in needed to scan wifi networks")
-                                .setNegativeButton("OK", null)
-                                //        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                //    public void onClick(DialogInterface dialog, int id) {
-                                //        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, RequestLocationPermissionID);
-                                //   }
-                                //});
-                                .create()
-                                .show();
-                    } else {
-                        Log.d(TAG, "Location permission was not granted, using 'never ask again'");
-                        locationPermFlag = false;
-                        Toast.makeText(getApplicationContext(), "Location permission must be granted to scan Wifi", Toast.LENGTH_LONG).show();
-                        //Never ask again and handle app without permission.
-                    }
+                    AlertDialog.Builder builder = new AlertDialog.Builder(DeviceAddNewActivity.this);
+                    builder.setTitle("Critical permission required")
+                            .setMessage("This permission in needed to scan wifi networks")
+                            .setNegativeButton("OK", null)
+                            //        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            //    public void onClick(DialogInterface dialog, int id) {
+                            //        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, RequestLocationPermissionID);
+                            //   }
+                            //});
+                            .create()
+                            .show();
+                } else {
+                    Log.d(TAG, "Location permission was not granted, using 'never ask again'");
+                    locationPermFlag = false;
+                    Toast.makeText(getApplicationContext(), "Location permission must be granted to scan Wifi", Toast.LENGTH_LONG).show();
+                    //Never ask again and handle app without permission.
                 }
             }
-            break;
         }
     }
 
